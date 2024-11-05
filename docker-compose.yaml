@@ -1,0 +1,14 @@
+version: '3'
+services:
+ expo-app:
+   container_name: project03-11
+   build: ./
+   ports:
+     - 8081:8081   # Metro Bundler for web
+     - 19000:19000   # Expo development server
+   environment:
+     - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+   volumes:
+     - ./myApp:/myApp
+     - /myApp/node_modules
+   command: npx expo start --tunnel
