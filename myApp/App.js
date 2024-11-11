@@ -1,13 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import Homepage from './screens/Homepage';
+
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app! Test</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <NavigationContainer>
+            <Tab.Navigator
+            screenOptions={{
+                      tabBarStyle: {
+                        backgroundColor: '#c9ad9d', // Light tan background to match the page theme
+                      },
+                      tabBarActiveTintColor: '#8b5e3c', // Darker brown for active tab icon and text
+                      tabBarInactiveTintColor: '#9c6644', // A slightly lighter brown for inactive tabs
+                      headerStyle: {
+                        backgroundColor: '#c9ad9d', // Light tan for header background
+                      },
+                      headerTintColor: '#8b5e3c', // Darker brown for header text color
+                      headerTitleStyle: {
+                        fontWeight: 'bold',
+                      },
+                    }}
+             >
+              <Tab.Screen
+                name="homepage"
+                component={Homepage}
+                options={{title: 'HomePage'}}
+              />
+
+              <Tab.Screen
+                         name="Test"
+                         component={Homepage}
+                         options={{title: 'Profile'}}
+                />
+
+
+            </Tab.Navigator>
+          </NavigationContainer>
+      );
 }
 
 const styles = StyleSheet.create({
