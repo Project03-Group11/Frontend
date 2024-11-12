@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "myApp",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -15,6 +16,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package":"com.csumb.myapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

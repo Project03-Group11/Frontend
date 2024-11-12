@@ -1,3 +1,7 @@
+import React from 'react';
+import { Platform } from 'react-native';
+import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
+import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -28,6 +32,21 @@ export default function App() {
                       },
                     }}
              >
+
+              {Platform.OS === 'web' ? (
+                <Tab.Screen
+                  name="webLogin"
+                  component={GoogleSignInWeb}
+                  options={{title: 'Web Login'}}
+                />
+              ) : (
+                <Tab.Screen
+                  name="appLogin"
+                  component={GoogleSignInExpo}
+                  options={{title: 'App Login'}}
+                />
+              )}
+
               <Tab.Screen
                 name="homepage"
                 component={Homepage}
@@ -38,8 +57,7 @@ export default function App() {
                          name="Test"
                          component={Homepage}
                          options={{title: 'Profile'}}
-                />
-
+              />
 
             </Tab.Navigator>
           </NavigationContainer>
