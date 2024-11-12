@@ -7,6 +7,11 @@ function GoogleSignInWeb() {
     const [error, setError] = useState('');
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
+        if (!credentialResponse.credential) {
+            setError('Invalid response from Google.');
+            return Promise.resolve(); 
+            // return;
+        }
         try {
             const decoded = jwtDecode(credentialResponse.credential);
             console.log('Decoded user info:', decoded);
@@ -18,9 +23,11 @@ function GoogleSignInWeb() {
                 image: decoded.picture,
             };
             console.log('User data to send to backend:', userData);
+            return Promise.resolve(); 
         } catch (error) {
             console.error('Login error:', error);
             setError('An error occurred during login. Please try again.');
+            return Promise.reject(error);
         }
     };
 
@@ -41,6 +48,7 @@ function GoogleSignInWeb() {
                     <div className="google-login-wrapper">
                         <GoogleLogin
                             onSuccess={handleGoogleLoginSuccess}
+                            // onSuccess={response => console.log(response)}
                             onError={() => {
                                 setError('Login failed. Please try again.');
                                 console.log('Login Failed');
