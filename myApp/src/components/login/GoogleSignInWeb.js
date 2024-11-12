@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import './WebLogin.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { useNavigation } from '@react-navigation/native';
 function GoogleSignInWeb() {
+    const navigation= useNavigation();
     const [error, setError] = useState('');
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
         if (!credentialResponse.credential) {
             setError('Invalid response from Google.');
             return Promise.resolve(); 
-            // return;
         }
         try {
             const decoded = jwtDecode(credentialResponse.credential);
@@ -23,6 +24,7 @@ function GoogleSignInWeb() {
                 image: decoded.picture,
             };
             console.log('User data to send to backend:', userData);
+            navigation.navigate('homepage', userData);
             return Promise.resolve(); 
         } catch (error) {
             console.error('Login error:', error);
@@ -48,7 +50,6 @@ function GoogleSignInWeb() {
                     <div className="google-login-wrapper">
                         <GoogleLogin
                             onSuccess={handleGoogleLoginSuccess}
-                            // onSuccess={response => console.log(response)}
                             onError={() => {
                                 setError('Login failed. Please try again.');
                                 console.log('Login Failed');
