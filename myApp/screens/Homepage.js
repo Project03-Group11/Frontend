@@ -1,21 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Platform, Pressable, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Pressable, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
+import { useNavigation } from '@react-navigation/native';
 
-const Post = ({ tag, username, content, timestamp, likes }) => {
+const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) => {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
+  const navigation = useNavigation();
+
+  const updatePostLikes = async (newLikeCount) => {
+    try {
+      await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/post/update/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ likes: newLikeCount }),
+      });
+    } catch (error) {
+      console.error("Error updating post likes:", error);
+    }
+  };
 
   const handleLike = () => {
-    setLiked(!liked);
-    setLikeCount(prevCount => liked ? prevCount - 1 : prevCount + 1);
+    const newLikedStatus = !liked;
+    const newLikeCount = newLikedStatus ? likeCount + 1 : likeCount - 1;
+
+    setLiked(newLikedStatus);
+    setLikeCount(newLikeCount);
+    updatePostLikes(newLikeCount); // Update the like count on the backend
   };
 
   return (
     <View style={styles.postContainer}>
+      <View style={styles.userInfoContainer}>
+        <Image source={{ uri: profilePic }} style={styles.profilePic} />
+        <Text style={styles.username}>{username}</Text>
+      </View>
+
       <Text style={styles.tag}>{tag}</Text>
-      <Text style={styles.username}>{username}</Text>
       <Text style={styles.content}>{content}</Text>
       <Text style={styles.timestamp}>{timestamp}</Text>
 
@@ -23,7 +47,7 @@ const Post = ({ tag, username, content, timestamp, likes }) => {
         <Pressable onPress={handleLike} style={styles.likeButton}>
           <Image
             source={{
-              uri: liked //TODO: update user given the post user ID to increase likes amount
+              uri: liked
                 ? 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678087-heart-512.png'
                 : 'https://cdn.icon-icons.com/icons2/1122/PNG/512/likeblackheartbutton_79537.png'
             }}
@@ -32,56 +56,102 @@ const Post = ({ tag, username, content, timestamp, likes }) => {
           <Text style={styles.likeCount}>{likeCount}</Text>
         </Pressable>
 
-        <Pressable style={styles.commentButton}>
-          <Text style={styles.actionText}> Comment</Text>
+        <Pressable
+          onPress={() => navigation.navigate('Comments', {
+            post: {
+              postId,
+              tag,
+              username,
+              profilePic,
+              content,
+              timestamp,
+              likes,
+            },
+          })}
+          style={styles.commentButton}
+        >
+          <Text style={styles.actionText}>Comment</Text>
         </Pressable>
+
       </View>
     </View>
   );
 };
 
+
 export default function Homepage() {
   const [posts, setPosts] = useState([]);
-    const [userMap, setUserMap] = useState({});
-    const [sortOrder, setSortOrder] = useState('newest');
+  const [userMap, setUserMap] = useState({});
+  const [clubMap, setClubMap] = useState({});
+  const [sortOrder, setSortOrder] = useState('newest');
 
-    //Context: this fetches users one time, at initial load, and makes a user map.
-     //We then use the user map to get which user posted what
-    useEffect(() => {
-      const fetchUsers = async () => {
-        try {
-          const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/user/get-all");
-          const data = await response.json();
-          const userMapping = data.reduce((acc, user) => {
-            acc[user.id] = user.username;
-            return acc;
-          }, {});
-          setUserMap(userMapping);
-        } catch (error) {
-          console.error("Error fetching users:", error);
-        }
-      };
+  // Fetch all users and map by user ID
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/user/get-all");
+        const data = await response.json();
+        const userMapping = data.reduce((acc, user) => {
+          acc[user.id] = {
+            username: user.username,
+            profilePic: user.profilePic,
+          };
+          return acc;
+        }, {});
+        setUserMap(userMapping);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
 
-      const fetchPosts = async () => {
-        try {
-          const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/post/get-all");
-          const data = await response.json();
-          const formattedPosts = data.map(post => ({
-            id: post.id.toString(),
-            tag: 'Example Club', // TODO: Replace with Actual Club
-            username: userMap[post.userId] || `User ${post.userId}`, //If somehow there is a null username, "Username" is User ID
-            content: post.discussion,
-            timestamp: new Date(post.createdAt).toLocaleString(),
-            likes: post.likes
-          }));
-          setPosts(formattedPosts);
-        } catch (error) {
-          console.error("Error fetching posts:", error);
-        }
-      };
+    fetchUsers();
+  }, []);
 
-      fetchUsers().then(fetchPosts); //this makes sure we actually get the users first before we fetch posts
-    }, [userMap]);
+  // Fetch all clubs and map by club ID
+  useEffect(() => {
+    const fetchClubs = async () => {
+      try {
+        const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/club/get-all");
+        const data = await response.json();
+        const clubMapping = data.reduce((acc, club) => {
+          acc[club.id] = club.name;
+          return acc;
+        }, {});
+        setClubMap(clubMapping);
+      } catch (error) {
+        console.error("Error fetching clubs:", error);
+      }
+    };
+
+    fetchClubs();
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(userMap).length === 0 || Object.keys(clubMap).length === 0) return;
+
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/post/get-all");
+        const data = await response.json();
+
+        const formattedPosts = data.map(post => ({
+          postId: post.id.toString(),
+          tag: clubMap[post.clubId] || "Unknown Club",
+          username: userMap[post.userId]?.username || `User ${post.userId}`,
+          profilePic: userMap[post.userId]?.profilePic || `https://randomuser.me/api/portraits/men/24.jpg`,
+          content: post.discussion,
+          timestamp: new Date(post.createdAt).toLocaleString(),
+          likes: post.likes,
+        }));
+
+        setPosts(formattedPosts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, [userMap, clubMap]);
 
   return (
     <View style={styles.container}>
@@ -99,11 +169,13 @@ export default function Homepage() {
 
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.postId}
         renderItem={({ item }) => (
           <Post
+            postId={item.postId}
             tag={item.tag}
             username={item.username}
+            profilePic={item.profilePic}
             content={item.content}
             timestamp={item.timestamp}
             likes={item.likes}
