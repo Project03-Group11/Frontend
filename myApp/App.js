@@ -1,14 +1,18 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
-import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
+
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
+import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
+
 import Homepage from './screens/Homepage';
+import ProfilePage from './screens/ProfilePage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,8 +58,8 @@ export default function App() {
               />
 
               <Tab.Screen
-                         name="Test"
-                         component={Homepage}
+                         name="ProfilePage"
+                         component={ProfilePage}
                          options={{title: 'Profile'}}
               />
 

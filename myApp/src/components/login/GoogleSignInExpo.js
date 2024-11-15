@@ -7,6 +7,7 @@ import * as Google from "expo-auth-session/providers/google";
 const redirectUri = 'https://auth.expo.io/@sebasx5/myApp';
 const webClientId= '604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
 const androidClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
+const iosClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
 const expoClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
 const GoogleSignInExpo = () => {
   console.log("start expo sign in");
@@ -15,6 +16,7 @@ const GoogleSignInExpo = () => {
         webClientId,
         expoClientId,
         androidClientId,
+        iosClientId,
         redirectUri,        
     }
     const [request, response, promptAsync] = Google.useAuthRequest(config);
