@@ -44,7 +44,7 @@ export default function Homepage() {
   const [posts, setPosts] = useState([]);
     const [userMap, setUserMap] = useState({});
     const [sortOrder, setSortOrder] = useState('newest');
-
+    
     //Context: this fetches users one time, at initial load, and makes a user map.
      //We then use the user map to get which user posted what
     useEffect(() => {
@@ -63,6 +63,7 @@ export default function Homepage() {
       };
 
       const fetchPosts = async () => {
+        // console.log(localStorage.getItem('userData'));
         try {
           const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/post/get-all");
           const data = await response.json();
