@@ -46,11 +46,21 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginBottom: 8,
   },
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,  // Space between user info and post content
+  },
+  profilePic: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,  // Circular profile picture
+    marginRight: 10,  // Space between profile picture and username
+  },
   username: {
     fontWeight: '700',
     fontSize: 18,
     color: '#333',
-    marginBottom: 4,
   },
   content: {
     fontSize: 15,
