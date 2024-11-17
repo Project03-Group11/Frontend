@@ -17,6 +17,7 @@
     "@react-oauth/google": "^0.12.1",
     "expo": "^52.0.6",
     "expo-auth-session": "~6.0.0",
+    "expo-secure-store": "^14.0.0",
     "expo-status-bar": "~2.0.0",
     "jwt-decode": "^4.0.0",
     "react": "18.3.1",

@@ -3,9 +3,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import './WebLogin.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useNavigation } from '@react-navigation/native';
-function GoogleSignInWeb() {
-    const navigation= useNavigation();
+// import { useNavigation } from '@react-navigation/native';
+function GoogleSignInWeb( { navigation } ) {
+    // const navigation= useNavigation();
     const [error, setError] = useState('');
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
@@ -18,13 +18,25 @@ function GoogleSignInWeb() {
             console.log('Decoded user info:', decoded);
             
             const userData = {
-                name: decoded.name,
                 email: decoded.email,
-                username: decoded.email,
-                image: decoded.picture,
+                username: decoded.name,
+                profile_pic: decoded.picture,
             };
             console.log('User data to send to backend:', userData);
-            navigation.navigate('homepage', userData);
+            localStorage.setItem('userData',JSON.stringify(userData));
+            const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/add`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`Failed to add user: ${response.statusText}`);
+            }
+            navigation.navigate('HomePage');
             return Promise.resolve(); 
         } catch (error) {
             console.error('Login error:', error);
