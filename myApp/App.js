@@ -1,20 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { Platform } from 'react-native';
-import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
-import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
+
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
+import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
 import * as SecureStore from 'expo-secure-store';
 
 import Homepage from './screens/Homepage';
+import ProfilePage from './screens/ProfilePage';
+import CommentsScreen from './screens/Comment';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const PlatformUsed = Platform.OS;
 
-function MainTabs({ isAuthenticated }) {
+const useAuth = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const checkAuth = () => {
+    if (Platform.OS === 'web') {
+      const token = localStorage.getItem('userData');
+      setIsAuthenticated(!!token); // Set to true if token exists
+    } else {
+      const checkSessionToken = async () => {
+        try {
+          const token = await SecureStore.getItemAsync('userData');
+          setIsAuthenticated(!!token); // Set to true if token exists
+        } catch (error) {
+          console.error('Error retrieving session token:', error);
+          setIsAuthenticated(false);
+        }
+      };
+      checkSessionToken();
+    }
+  };
+  useEffect(() => {
+    checkAuth();
+  }, []); // Run once on component mount
+
+  return isAuthenticated;
+};
+
+function MainTabs({ route }) {
+  const { isAuthenticated } = route.params;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -55,7 +88,7 @@ function MainTabs({ isAuthenticated }) {
           />
           <Tab.Screen
             name="Profile"
-            component={Homepage} // Replace with actual Profile screen
+            component={ProfilePage} // Replace with actual Profile screen
             options={{ title: 'Profile' }}
           />
         </>
@@ -66,36 +99,26 @@ function MainTabs({ isAuthenticated }) {
 
 
 export default function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    
-    if(PlatformUsed==='web'){
-      useEffect(() => {
-        const token = localStorage.getItem('userData');
-        setIsAuthenticated(!!token); // Set to true if token exists
-      }, []);
-    }else{
-      useEffect(() => {
-        const checkSessionToken = async () => {
-          try {
-            const token = await SecureStore.getItemAsync('userData');
-            setIsAuthenticated(!!token); // Set to true if token exists
-          } catch (error) {
-            console.error('Error retrieving session token:', error);
-            setIsAuthenticated(false);
-          }
-        };
-        checkSessionToken();
-      }, []);
-    }
+  const isAuthenticated= useAuth();
 
-    return (
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            {/* <Stack.Screen name="MainTabs" component={MainTabs} /> */}
-            <Stack.Screen name="MainTabs">
-              {() => <MainTabs isAuthenticated={isAuthenticated} />}
-            </Stack.Screen>
-          </Stack.Navigator>
-        </NavigationContainer>
-    );
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="MainTabs"
+      >
+        <Stack.Screen
+          name="MainTabs"
+          component={MainTabs}
+          initialParams={{ isAuthenticated: isAuthenticated }}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Comments"
+          component={CommentsScreen}
+          options={{ title: 'Comments' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
+
