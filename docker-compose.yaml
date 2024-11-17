@@ -1,7 +1,7 @@
 version: '3'
 services:
  expo-app:
-   container_name: project03-11
+   container_name: project03-1
    build: ./
    ports:
      - 8081:8081   # Metro Bundler for web
@@ -11,4 +11,4 @@ services:
    volumes:
      - ./myApp:/myApp
      - /myApp/node_modules
-   command: npx expo start --tunnel
+   command: bash -c "npm install && npx expo start --tunnel"

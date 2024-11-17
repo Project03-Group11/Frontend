@@ -1,13 +1,19 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
-import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
-import CommentsScreen from './screens/Comment';
+import { Platform } from 'react-native';
+
 import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
+import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
+
 import Homepage from './screens/Homepage';
+import ProfilePage from './screens/ProfilePage';
+import CommentsScreen from './screens/Comment';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,7 +56,7 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Profile"
-        component={Homepage}
+        component={ProfilePage}
         options={{ title: 'My Profile' }}
       />
     </Tab.Navigator>
@@ -60,22 +66,18 @@ function MainTabs() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="MainTabs" component={MainTabs} />
+      <Stack.Navigator
+        initialRouteName="MainTabs"
+      >
+        <Stack.Screen
+          name="MainTabs"
+          component={MainTabs}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Comments"
           component={CommentsScreen}
-          options={{
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: '#c9ad9d', // Ensure this matches your desired color
-            },
-            headerTintColor: '#8b5e3c',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-            title: 'Comments', // Title for the Comments screen
-          }}
+          options={{ title: 'Comments' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
