@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {Platform, View, Text, Image, TouchableOpacity, FlatList, ScrollView, Alert, Modal, Pressable, TextInput } from 'react-native';
 import styles from "./ProfilepageStyles";
+import { useNavigation } from '@react-navigation/native'; // For navigation
 
 export default function ProfilePage() {
+  const navigation = useNavigation();
+
   if(Platform.OS==='web'){
     userId=localStorage.getItem('userId');
   }else{
@@ -12,6 +15,31 @@ export default function ProfilePage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState(' ');
   const [user, setUser]=useState({});
+
+  const handleRefresh = () => {
+    // navigation.navigate('MainTabs', { screen: 'Homepage' });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'MainTabs' }],
+    });
+  };
+
+  // Logout handler function
+  const handleLogout = async () => {
+    try {
+      // Clear the stored user data (userId, authentication token, etc.)
+      if (Platform.OS === 'web') {
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userData');
+      } else {
+        await SecureStore.deleteItemAsync('userId');
+        await SecureStore.deleteItemAsync('userData');
+      }
+      handleRefresh();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
  
   useEffect(() => {
     const fetchUser = async () => {
@@ -121,6 +149,10 @@ return (
         <Text style={styles.username}>{user.username}</Text>
         <TouchableOpacity style={styles.editProfileButton} onPress={() => setModalVisible(true)}>
           <Text style={{ color: 'white' }}>Edit Profile</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
       </View>
 

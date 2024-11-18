@@ -8,6 +8,13 @@ function GoogleSignInWeb( ) {
     const navigation= useNavigation();
     const [error, setError] = useState('');
 
+    const handleRefresh = () => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MainTabs' }],
+        });
+    };
+
     const handleGoogleLoginSuccess = async (credentialResponse) => {
         if (!credentialResponse.credential) {
             setError('Invalid response from Google.');
@@ -36,9 +43,7 @@ function GoogleSignInWeb( ) {
             if (!response.ok) {
                 throw new Error(`Failed to add user: ${response.statusText}`);
             }
-            console.log("prenav");
-            navigation.navigate('MainTabs', { screen: 'Homepage' });
-            console.log("postnav");
+            handleRefresh();
             return Promise.resolve(); 
         } catch (error) {
             console.error('Login error:', error);
