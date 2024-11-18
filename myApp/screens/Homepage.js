@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Pressable, Image } from 'react-native';
+import {Platform, View, Text, FlatList, StyleSheet, Pressable, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
 import { useNavigation } from '@react-navigation/native';
@@ -80,11 +80,19 @@ const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) 
 
 
 export default function Homepage() {
+  if(Platform.OS==='web'){
+    userData=JSON.parse(localStorage.getItem('userData'));
+    console.log(userData);
+  }else{
+    userData=JSON.parse(SecureStore.getItem('userData'));
+    console.log(userData);
+  }
+
   const [posts, setPosts] = useState([]);
   const [userMap, setUserMap] = useState({});
   const [clubMap, setClubMap] = useState({});
   const [sortOrder, setSortOrder] = useState('newest');
-
+  
   // Fetch all users and map by user ID
   useEffect(() => {
     const fetchUsers = async () => {
@@ -106,6 +114,25 @@ export default function Homepage() {
 
     fetchUsers();
   }, []);
+
+  // Fetch user ID by email
+    useEffect(() => {
+      const fetchUserId = async () => {
+        try {
+          const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/email/${userData.email}`);
+          const data = await response.json();
+          // setUserId(data.id);
+          if(Platform.OS==='web'){
+            localStorage.setItem("userId",data.id);
+          }else{
+            SecureStore.setItem("userId",data.id);
+          }
+        } catch (error) {
+          console.error("Error fetching user id:", error);
+        }
+      };
+      fetchUserId();
+    }, [userData.email]);
 
   // Fetch all clubs and map by club ID
   useEffect(() => {

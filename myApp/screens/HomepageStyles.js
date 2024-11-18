@@ -1,10 +1,13 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
+
+// Get screen dimensions for responsive styling
+const { width } = Dimensions.get('window');  // Get the screen width
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'web' ? 20 : 10,
-    backgroundColor: '#f4e7d1',
+    paddingTop: Platform.OS === 'web' ? 20 : 10,  // Different padding for web vs mobile
+    backgroundColor: '#f4e7d1', // Fixed background color
   },
   navBar: {
     width: '100%',
@@ -21,9 +24,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   postContainer: {
-    width: '100%',
-    minWidth: Platform.OS === 'web' ? 800 : 400,
-    padding: 20,
+    width: '90%',
+    minWidth: width * 0.8, // Dynamic minimum width, adjusts based on screen size (80%)
+    maxWidth: width * 0.95, // Max width of the post container (95% of the screen width)
+    padding: width * 0.05,  // Dynamic padding based on screen size (5% of the screen width)
     marginVertical: 10,
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -32,7 +36,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
-    borderWidth: Platform.OS === 'web' ? 1 : 0,
+    borderWidth: Platform.OS === 'web' ? 1 : 0,  // Border only for web
     borderColor: '#ddd',
   },
   tag: {
@@ -126,7 +130,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 40,
-    width: 200,
+    width: width * 0.5,  // Dynamic width based on screen size (50% of the screen width)
     backgroundColor: '#fff',
     borderRadius: 8,
     borderWidth: 1,
