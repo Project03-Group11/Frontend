@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Platform } from 'react-native';
 
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -46,8 +44,8 @@ const useAuth = () => {
   return isAuthenticated;
 };
 
-function MainTabs({ route }) {
-  const { isAuthenticated } = route.params;
+function MainTabs() {
+  const isAuthenticated= useAuth();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -99,8 +97,6 @@ function MainTabs({ route }) {
 
 
 export default function App() {
-  const isAuthenticated= useAuth();
-
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -109,7 +105,6 @@ export default function App() {
         <Stack.Screen
           name="MainTabs"
           component={MainTabs}
-          initialParams={{ isAuthenticated: isAuthenticated }}
           options={{ headerShown: false }}
         />
         <Stack.Screen

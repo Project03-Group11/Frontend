@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity, Image } from 'react-native';
+import { Platform, View, Text, FlatList, TextInput, TouchableOpacity, Image } from 'react-native';
 import styles from './CommentStyles';
 
 const API_BASE_URL = 'https://group11be-29e4f568939f.herokuapp.com/api/comment';
@@ -9,6 +9,12 @@ const CommentsScreen = ({ route }) => {
     const { post } = route.params;
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+
+    if(Platform.OS==='web'){
+        userId=localStorage.getItem('userId');
+    }else{
+        userId=JSON.parse(SecureStore.getItem('userId'));
+    }
 
     useEffect(() => {
         fetchCommentsWithUserData();
@@ -47,7 +53,7 @@ const CommentsScreen = ({ route }) => {
                     },
                     body: JSON.stringify({
                         postId: post.postId,
-                        userId: 6, // TODO:Replace with the actual user ID if available
+                        userId: userId, 
                         comment: newComment,
                     }),
                 });

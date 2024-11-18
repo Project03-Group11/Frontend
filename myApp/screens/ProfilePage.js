@@ -1,35 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, ScrollView, Alert, Modal, Pressable, TextInput } from 'react-native';
+import {Platform, View, Text, Image, TouchableOpacity, FlatList, ScrollView, Alert, Modal, Pressable, TextInput } from 'react-native';
 import styles from "./ProfilepageStyles";
 
 export default function ProfilePage() {
+  if(Platform.OS==='web'){
+    userId=localStorage.getItem('userId');
+  }else{
+    userId=JSON.parse(SecureStore.getItem('userId'));
+  }
+
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState(' ');
-  const [user, setUser] = useState({
-    username: "Loading...",
-    profilePicture: "https://i.pinimg.com/originals/96/cd/7e/96cd7e329caf7040d9f6ddfea710ebcd.gif",
-    clubs: [
-      { name: "The Lego Man Club", currentRead: "To Kill a Mockingbird by Harper Lee" },
-      { name: "Alpha Wolf Club", currentRead: "1984 by George Orwell" },
-    ],
-    ownedClubs: [],
-    userId: null
-  });
-
+  const [user, setUser]=useState({});
+ 
   useEffect(() => {
     const fetchUser = async () => {
           try {
-            const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/user/get/email/lego.dreamer@example.com");
+            const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/${userId}`);
             const data = await response.json();
-
-            setUser(prevUser => ({
-              ...prevUser,
-              username: data.username,
-              userId: data.id, // Set the userId here from the response
-            }));
+            console.log(data);
+            setUser(data);
+            
+            // setUser(prevUser => ({
+            //   ...prevUser,
+            //   username: data.username,
+            //   userId: data.id, // Set the userId here from the response
+            // }));
             setText(data.username);
           } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error("Error fetching user:", error);
           }
         };
 
@@ -62,7 +61,7 @@ export default function ProfilePage() {
         return;
     }
     try {
-          const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/user/update/5", {
+          const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/update/${userId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -118,7 +117,7 @@ return (
 
     <View style={styles.profileContainer}>
       <View style={styles.profileHeader}>
-        <Image source={{ uri: user.profilePicture }} style={styles.profilePicture} />
+        <Image source={{ uri: user.profilePic }} style={styles.profilePicture} />
         <Text style={styles.username}>{user.username}</Text>
         <TouchableOpacity style={styles.editProfileButton} onPress={() => setModalVisible(true)}>
           <Text style={{ color: 'white' }}>Edit Profile</Text>

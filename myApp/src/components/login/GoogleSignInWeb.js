@@ -3,9 +3,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import './WebLogin.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-// import { useNavigation } from '@react-navigation/native';
-function GoogleSignInWeb( { navigation } ) {
-    // const navigation= useNavigation();
+import { useNavigation } from '@react-navigation/native';
+function GoogleSignInWeb( ) {
+    const navigation= useNavigation();
     const [error, setError] = useState('');
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
@@ -36,7 +36,9 @@ function GoogleSignInWeb( { navigation } ) {
             if (!response.ok) {
                 throw new Error(`Failed to add user: ${response.statusText}`);
             }
-            navigation.navigate('HomePage');
+            console.log("prenav");
+            navigation.navigate('MainTabs', { screen: 'Homepage' });
+            console.log("postnav");
             return Promise.resolve(); 
         } catch (error) {
             console.error('Login error:', error);
