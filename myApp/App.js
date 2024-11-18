@@ -14,6 +14,7 @@ import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
 import Homepage from './screens/Homepage';
 import ProfilePage from './screens/ProfilePage';
 import CommentsScreen from './screens/Comment';
+import JoinClub from './screens/JoinClub';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,6 +54,11 @@ function MainTabs() {
         name="Homepage"
         component={Homepage}
         options={{ title: 'Discussion Feed' }}
+      />
+      <Tab.Screen
+        name="JoinClub"
+        component={JoinClub}
+        options={{ title: 'Join Club' }}
       />
       <Tab.Screen
         name="Profile"
