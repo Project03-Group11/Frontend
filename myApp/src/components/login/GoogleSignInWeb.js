@@ -91,7 +91,7 @@ function GoogleSignInWeb( ) {
                 <div className="decorative-pattern"></div>
             </div>
         </div>
-    );
+    ); 
 }
 
 export default function App() {
