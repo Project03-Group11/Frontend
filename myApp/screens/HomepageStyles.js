@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     width: '90%',
     minWidth: width * 0.8, // Dynamic minimum width, adjusts based on screen size (80%)
     maxWidth: width * 0.95, // Max width of the post container (95% of the screen width)
-    padding: width * 0.05,  // Dynamic padding based on screen size (5% of the screen width)
+    maxHeight:250,
+    padding: width * 0.03,  // Dynamic padding based on screen size (5% of the screen width)
     marginVertical: 10,
     backgroundColor: '#fff',
     borderRadius: 12,

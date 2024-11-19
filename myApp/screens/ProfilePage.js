@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {Platform, View, Text, Image, TouchableOpacity, FlatList, ScrollView, Alert, Modal, Pressable, TextInput } from 'react-native';
 import styles from "./ProfilepageStyles";
-import { useNavigation } from '@react-navigation/native'; // For navigation
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfilePage() {
   const navigation = useNavigation();
@@ -15,9 +15,9 @@ export default function ProfilePage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState(' ');
   const [user, setUser]=useState({});
+  const [clubs, setClubs] = useState([]);
 
   const handleRefresh = () => {
-    // navigation.navigate('MainTabs', { screen: 'Homepage' });
     navigation.reset({
       index: 0,
       routes: [{ name: 'MainTabs' }],
@@ -27,7 +27,7 @@ export default function ProfilePage() {
   // Logout handler function
   const handleLogout = async () => {
     try {
-      // Clear the stored user data (userId, authentication token, etc.)
+
       if (Platform.OS === 'web') {
         localStorage.removeItem('userId');
         localStorage.removeItem('userData');
@@ -58,12 +58,36 @@ export default function ProfilePage() {
           } catch (error) {
             console.error("Error fetching user:", error);
           }
-        };
+    };
+
+    const fetchAllClubs = async () => {
+      try {
+        const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/club/get-all`);
+        const data = await response.json();
+        
+        setClubs(data);
+        
+        console.log(JSON.stringify(clubs));
+      } catch (error) {
+        console.error("Error fetching clubs:", error);
+      }
+};
+
+
+        fetchUser();
+        fetchAllClubs();
+  }, []);
+
+  useEffect(() => {
 
         const fetchOwnedClubs = async () => {
-          if (!user.userId) return; // Only fetch if userId is set
 
-          var link = "https://group11be-29e4f568939f.herokuapp.com/api/club/get/user/"+user.userId;
+          if (!user.id){
+            console.log("nooooo")
+            return;
+          }
+          console.log("yesssss")
+          var link = "https://group11be-29e4f568939f.herokuapp.com/api/club/get/user/"+user.id;
 
           try {
             const response = await fetch(link);
@@ -78,9 +102,43 @@ export default function ProfilePage() {
           }
         };
 
-        fetchUser();
+        const fetchMemberClubs = async () => {
+
+          if (!user.id){
+            console.log("nooooo")
+            return;
+          }
+          console.log("yesssss")
+          var link = "https://group11be-29e4f568939f.herokuapp.com/api/member/get/user/"+user.id;
+
+          try {
+            const response = await fetch(link);
+            const data = await response.json();
+            console.log(JSON.stringify(data.length))
+            var memberClubs = []
+
+            for(var i = 0; i < data.length; i++){
+              for(var j = 0; j < clubs.length; j++){
+                if(data[i].clubId == clubs[j].id ){
+                  memberClubs.push(clubs[j]);
+                }
+              }
+            }
+
+            console.log(JSON.stringify(memberClubs))
+
+            setUser(prevUser => ({
+              ...prevUser,
+              clubs: memberClubs,
+            }));
+          } catch (error) {
+            console.error("Error fetching clubs:", error);
+          }
+        };
+
         fetchOwnedClubs();
-  }, [user.userId]);
+        fetchMemberClubs();
+  }, [clubs]);
 
   const handleSaveUsername = async () => {
     if(!text.trim()){
@@ -162,9 +220,9 @@ return (
           data={user.clubs}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <View style={styles.clubItem}>
+            <View style={styles.ownedClubItem}>
               <Text style={styles.myClubName}>{item.name}</Text>
-              <Text style={styles.myCurrentRead}>{item.currentRead}</Text>
+              <Text style={styles.myCurrentRead}>{item.description}</Text>
             </View>
           )}
         />

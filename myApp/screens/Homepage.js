@@ -171,14 +171,20 @@ export default function Homepage() {
           likes: post.likes,
         }));
 
-        setPosts(formattedPosts);
+        const sortedPosts = formattedPosts.sort((a, b) => {
+          const dateA = new Date(a.timestamp);
+          const dateB = new Date(b.timestamp);
+          return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+        });
+
+        setPosts(sortedPosts);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
     };
 
     fetchPosts();
-  }, [userMap, clubMap]);
+  }, [userMap, clubMap, sortOrder]);
 
   return (
     <View style={styles.container}>
