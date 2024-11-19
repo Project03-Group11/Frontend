@@ -12,6 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 import Homepage from './screens/Homepage';
 import ProfilePage from './screens/ProfilePage';
 import CommentsScreen from './screens/Comment';
+import JoinClubPage from './screens/JoinClubPage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -83,6 +84,11 @@ function MainTabs() {
             name="Homepage"
             component={Homepage}
             options={{ title: 'HomePage' }}
+          />
+          <Tab.Screen
+            name="JoinClub"
+            component={JoinClubPage}
+            options={{ title: 'Join Club' }}
           />
           <Tab.Screen
             name="Profile"
