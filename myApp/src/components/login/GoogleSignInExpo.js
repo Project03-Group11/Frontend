@@ -5,6 +5,9 @@ import * as Google from 'expo-auth-session/providers/google';
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 const { width, height } = Dimensions.get('window');
+import { useNavigation } from '@react-navigation/native';
+import { refreshAsync } from 'expo-auth-session';
+
 
 const redirectUri = 'https://auth.expo.io/@sebasx5/myApp';
 const webClientId= '604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
@@ -12,7 +15,7 @@ const androidClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googl
 const iosClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
 const expoClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
 
-export default function GoogleSignInScreen({ navigation }) {
+export default function GoogleSignInScreen() {
   const config={
             webClientId,
             expoClientId,
@@ -24,6 +27,7 @@ export default function GoogleSignInScreen({ navigation }) {
 
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigation= useNavigation();
 
     useEffect(() => {
         if (response?.type === 'success') {
@@ -59,7 +63,8 @@ export default function GoogleSignInScreen({ navigation }) {
             }
 
             setUserInfo(userData);
-            navigation.navigate('HomePage');
+            // navigation.navigate('HomePage');
+            navigation.navigate('MainTabs', { screen: 'Homepage' });
         } catch (error) {
             console.error('Login error:', error);
             Alert.alert('Login Error', 'An error occurred during login. Please try again.');
@@ -68,6 +73,38 @@ export default function GoogleSignInScreen({ navigation }) {
         }
     };
 
+
+    const handleRefresh = () => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MainTabs' }],
+        });
+    };
+
+    const mockLogin = async() => {
+        setLoading(true);
+        const userData = {
+            email: "test4@gmail.com",
+            username: "Eugene Douglas",
+            profile_pic: "https://randomuser.me/api/portraits/men/17.jpg",
+        };
+        try {
+            // Save user data securely
+            await SecureStore.setItemAsync('userData', JSON.stringify(userData));    
+            // Set user info in the app's state
+            setUserInfo(userData);   
+            // Navigate to the HomePage
+            // navigation.navigate('HomePage');
+            navigation.navigate('MainTabs', { screen: 'Homepage' });
+            handleRefresh();
+        } catch (error) {
+            console.error("Error during mock login:", error);
+        } finally {
+            // Turn off loading state
+            setLoading(false);
+        }
+
+    }
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Welcome to ShelfTalk</Text>
@@ -84,7 +121,8 @@ export default function GoogleSignInScreen({ navigation }) {
                     <Button 
                         style = {styles.googleButton}
                         title="Sign in with Google"
-                        onPress={() => promptAsync()}
+                        // onPress={() => promptAsync()}
+                        onPress={()=>mockLogin()}
                         disabled={!request}
                     />
                 </View>

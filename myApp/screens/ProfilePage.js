@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {Platform, View, Text, Image, TouchableOpacity, FlatList, ScrollView, Alert, Modal, Pressable, TextInput } from 'react-native';
 import styles from "./ProfilepageStyles";
 import { useNavigation } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store';
+
 
 export default function ProfilePage() {
   const navigation = useNavigation();
@@ -10,6 +12,7 @@ export default function ProfilePage() {
     userId=localStorage.getItem('userId');
   }else{
     userId=JSON.parse(SecureStore.getItem('userId'));
+    // userId=4;
   }
 
   const [modalVisible, setModalVisible] = useState(false);

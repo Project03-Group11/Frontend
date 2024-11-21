@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, View, Text, FlatList, TextInput, TouchableOpacity, Image } from 'react-native';
 import styles from './CommentStyles';
+import * as SecureStore from 'expo-secure-store';
 
 const API_BASE_URL = 'https://group11be-29e4f568939f.herokuapp.com/api/comment';
 const USER_API_URL = 'https://group11be-29e4f568939f.herokuapp.com/api/user';

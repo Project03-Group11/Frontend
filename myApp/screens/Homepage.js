@@ -3,6 +3,8 @@ import {Platform, View, Text, FlatList, StyleSheet, Pressable, Image } from 'rea
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
 import { useNavigation } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store';
+
 
 const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) => {
   const [liked, setLiked] = useState(false);
@@ -119,13 +121,15 @@ export default function Homepage() {
     useEffect(() => {
       const fetchUserId = async () => {
         try {
+          console.log(userData.email);
           const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/email/${userData.email}`);
           const data = await response.json();
           // setUserId(data.id);
+          console.log(data);
           if(Platform.OS==='web'){
             localStorage.setItem("userId",data.id);
           }else{
-            SecureStore.setItem("userId",data.id);
+            SecureStore.setItem("userId",JSON.stringify(data.id));
           }
         } catch (error) {
           console.error("Error fetching user id:", error);
