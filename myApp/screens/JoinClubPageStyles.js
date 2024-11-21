@@ -1,10 +1,10 @@
-import { StyleSheet, Platform } from 'react-native';
-
+import { StyleSheet, Platform, Dimensions } from 'react-native';
+const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   clubSearchContainer: {
-    backgroundColor: '#faf3e9',
     flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+    paddingTop: Platform.OS === 'web' ? 20 : 10,  // Different padding for web vs mobile
+    backgroundColor: '#f4e7d1',
   },
 
   navbar: {
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     top: 0,
     width: '100%',
     backgroundColor: '#3e2a1c',
-    paddingVertical: 15,
+    paddingVertical: 18, // Increased padding
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
 
   navbarTitle: {
-    fontSize: 24,
+    fontSize: 26, // Increased font size
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
@@ -30,16 +30,16 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     justifyContent: 'center',
-    margin: 20,
+    margin: 0, // Increased margin
   },
 
   searchInput: {
     width: '60%',
-    padding: 10,
+    padding: 12, // Increased padding
     borderWidth: 1,
     borderColor: '#d4b59e',
-    borderRadius: 5,
-    fontSize: 16,
+    borderRadius: 6, // Slightly increased border radius
+    fontSize: 18, // Increased font size
     backgroundColor: '#fff',
   },
 
@@ -47,51 +47,63 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 50, // Increased marginTop for more space
   },
 
   clubCard: {
-    flexDirection: 'row',
     backgroundColor: '#fff8f0',
-    borderRadius: 8,
+    borderRadius: 10, // Increased border radius
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 6, // Slightly larger shadow radius
     elevation: 4,
-    padding: 20,
-    marginVertical: 15,
-    width: '80%',
-    maxWidth: 600,
-  },
-
-  clubInfo: {
-    flex: 1,
+    padding: 25, // Increased padding
+    marginVertical: 20, // Increased margin
+    width: '90%',
+    maxWidth: 650, // Increased maxWidth
   },
 
   clubName: {
-    fontSize: 20,
+    fontSize: 24, // Increased font size
     color: '#3e2a1c',
     fontWeight: 'bold',
+    marginBottom: 12, // Increased margin
+  },
+
+  clubDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  clubImage: {
+    width: 90, // Increased width
+    height: 135, // Increased height
+    borderRadius: 10, // Increased border radius
+    marginRight: 18, // Increased margin
+  },
+
+  clubTextContainer: {
+    flex: 1,
   },
 
   summary: {
     fontStyle: 'italic',
     color: '#555',
-    marginVertical: 10,
+    marginBottom: 12, // Increased margin
   },
 
   joinButton: {
     backgroundColor: '#d4b59e',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    marginTop: 10,
+    paddingVertical: 10, // Increased vertical padding
+    paddingHorizontal: 18, // Increased horizontal padding
+    borderRadius: 6, // Slightly increased border radius
   },
 
   joinButtonText: {
     color: 'white',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

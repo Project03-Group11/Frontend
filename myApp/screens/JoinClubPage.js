@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Platform, View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import styles from './JoinClubPageStyles';
 
 const JoinClubPage = () => {
+  let userId;
+
+  if (Platform.OS === 'web') {
+    userId = localStorage.getItem('userId');
+  } else {
+    userId = JSON.parse(SecureStore.getItem('userId'));
+  }
+
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [allClubs, setAllClubs] = useState([]);
@@ -15,8 +23,19 @@ const JoinClubPage = () => {
           throw new Error('Failed to fetch all clubs.');
         }
         const data = await response.json();
-        setResults(data); // Initially show all clubs
-        setAllClubs(data); // Store all clubs for reference
+
+        // Fetch the book covers and add them to the club data
+        const clubsWithCovers = await Promise.all(data.map(async (club) => {
+          const bookResponse = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/book/get/${club.bookId}`);
+          const bookData = await bookResponse.json();
+          return {
+            ...club,
+            coverImg: bookData.coverImg, // Add the coverImg to each club's data
+          };
+        }));
+
+        setResults(clubsWithCovers); // Initially show all clubs with cover images
+        setAllClubs(clubsWithCovers); // Store all clubs for reference
       } catch (error) {
         Alert.alert('Error', error.message);
       }
@@ -37,22 +56,63 @@ const JoinClubPage = () => {
         throw new Error('Failed to fetch clubs.');
       }
       const data = await response.json();
-      setResults(data); // Show filtered results
+      
+      // Add book cover images to the filtered results
+      const filteredClubsWithCovers = await Promise.all(data.map(async (club) => {
+        const bookResponse = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/book/get/${club.bookId}`);
+        const bookData = await bookResponse.json();
+        return {
+          ...club,
+          coverImg: bookData.coverImg,
+        };
+      }));
+
+      setResults(filteredClubsWithCovers); // Show filtered results with cover images
     } catch (error) {
       Alert.alert('Error', error.message);
     }
   };
 
-  const handleJoinClub = (clubId) => {
-    Alert.alert('Join Club', `You have joined the club with ID: ${clubId}`);
-    // Implement join club logic here
+  const handleJoinClub = async (clubId) => {
+    try {
+      const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/member/get/user/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user membership data');
+      }
+      const memberships = await response.json();
+      const isAlreadyMember = memberships.some((membership) => membership.clubId === clubId);
+      
+      if (isAlreadyMember) {
+        Alert.alert('Already a member', 'You are already a member of this club.');
+        return; 
+      }
+        const joinResponse = await fetch('https://group11be-29e4f568939f.herokuapp.com/api/member/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId,
+          clubId: clubId,
+        }),
+      });
+  
+      if (!joinResponse.ok) {
+        throw new Error('Failed to join the club');
+      }
+  
+      const joinData = await joinResponse.json();
+      console.log('Successfully joined the club:', joinData);
+      Alert.alert('Success', 'You have successfully joined the club!');
+    } catch (error) {
+      console.error('Error joining the club:', error);
+      Alert.alert('Error', error.message);
+    }
   };
+  
 
   return (
     <View style={styles.clubSearchContainer}>
-      <View style={styles.navbar}>
-        <Text style={styles.navbarTitle}>Join a Club</Text>
-      </View>
 
       <View style={styles.searchBar}>
         <TextInput
@@ -61,7 +121,7 @@ const JoinClubPage = () => {
           value={searchTerm}
           onChangeText={(text) => {
             setSearchTerm(text);
-            handleSearch(text);  // Calls to update the search
+            handleSearch(text); // Calls to update the search
           }}
         />
       </View>
@@ -69,15 +129,21 @@ const JoinClubPage = () => {
       <ScrollView contentContainerStyle={styles.resultsContainer}>
         {results.map((club) => (
           <View key={club.id} style={styles.clubCard}>
-            <View style={styles.clubInfo}>
-              <Text style={styles.clubName}>{club.name}</Text>
-              <Text style={styles.summary}>{club.description}</Text>
-              <TouchableOpacity
-                style={styles.joinButton}
-                onPress={() => handleJoinClub(club.id)}
-              >
-                <Text style={styles.joinButtonText}>Join Club</Text>
-              </TouchableOpacity>
+            <Text style={styles.clubName}>{club.name}</Text>
+            <View style={styles.clubDetails}>
+              <Image
+                source={{ uri: club.coverImg }} // Now use coverImg directly from club data
+                style={styles.clubImage}
+              />
+              <View style={styles.clubTextContainer}>
+                <Text style={styles.summary}>{club.description}</Text>
+                <TouchableOpacity
+                  style={styles.joinButton}
+                  onPress={() => handleJoinClub(club.id)}
+                >
+                  <Text style={styles.joinButtonText}>Join Club</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         ))}
