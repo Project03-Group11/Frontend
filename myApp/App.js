@@ -53,8 +53,8 @@ function MainTabs() {
         tabBarStyle: {
           backgroundColor: '#c9ad9d',
         },
-        tabBarActiveTintColor: '#8b5e3c',
-        tabBarInactiveTintColor: '#9c6644',
+        tabBarActiveTintColor: '#ebe8e6',
+        tabBarInactiveTintColor: '#919090',
         headerStyle: {
           backgroundColor: '#c9ad9d',
         },

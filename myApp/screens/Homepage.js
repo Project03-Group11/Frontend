@@ -3,6 +3,7 @@ import {Platform, View, Text, FlatList, StyleSheet, Pressable, Image } from 'rea
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
 import { useNavigation } from '@react-navigation/native';
+import CreatePost from './CreatePost';
 
 const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) => {
   const [liked, setLiked] = useState(false);
@@ -153,46 +154,48 @@ export default function Homepage() {
     fetchClubs();
   }, []);
 
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/post/get-all");
+      const data = await response.json();
+
+      const formattedPosts = data.map(post => ({
+        postId: post.id.toString(),
+        tag: clubMap[post.clubId] || "Unknown Club",
+        username: userMap[post.userId]?.username || `User ${post.userId}`,
+        profilePic: userMap[post.userId]?.profilePic || `https://randomuser.me/api/portraits/men/24.jpg`,
+        content: post.discussion,
+        timestamp: new Date(post.createdAt).toLocaleString(),
+        likes: post.likes,
+      }));
+
+      const sortedPosts = formattedPosts.sort((a, b) => {
+        const dateA = new Date(a.timestamp);
+        const dateB = new Date(b.timestamp);
+        return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+      });
+
+      setPosts(sortedPosts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
+
   useEffect(() => {
     if (Object.keys(userMap).length === 0 || Object.keys(clubMap).length === 0) return;
-
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch("https://group11be-29e4f568939f.herokuapp.com/api/post/get-all");
-        const data = await response.json();
-
-        const formattedPosts = data.map(post => ({
-          postId: post.id.toString(),
-          tag: clubMap[post.clubId] || "Unknown Club",
-          username: userMap[post.userId]?.username || `User ${post.userId}`,
-          profilePic: userMap[post.userId]?.profilePic || `https://randomuser.me/api/portraits/men/24.jpg`,
-          content: post.discussion,
-          timestamp: new Date(post.createdAt).toLocaleString(),
-          likes: post.likes,
-        }));
-
-        const sortedPosts = formattedPosts.sort((a, b) => {
-          const dateA = new Date(a.timestamp);
-          const dateB = new Date(b.timestamp);
-          return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-        });
-
-        setPosts(sortedPosts);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-
     fetchPosts();
   }, [userMap, clubMap, sortOrder]);
+
+  const handleRefresh = () => {
+    fetchPosts();
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
         <Text style={styles.filterLabel}>Sort By:</Text>
-        <Picker
+        <Picker style={styles.sortPicker}
           selectedValue={sortOrder}
-          style={styles.picker}
           onValueChange={(itemValue) => setSortOrder(itemValue)}
         >
           <Picker.Item label="Newest to Oldest" value="newest" />
@@ -200,22 +203,24 @@ export default function Homepage() {
         </Picker>
       </View>
 
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.postId}
-        renderItem={({ item }) => (
-          <Post
-            postId={item.postId}
-            tag={item.tag}
-            username={item.username}
-            profilePic={item.profilePic}
-            content={item.content}
-            timestamp={item.timestamp}
-            likes={item.likes}
-          />
-        )}
-        contentContainerStyle={styles.listContainer}
-      />
+<CreatePost onPostCreated={handleRefresh()}/>
+
+<FlatList
+  data={posts}
+  keyExtractor={(item) => item.postId}
+  renderItem={({ item }) => (
+    <Post
+      postId={item.postId}
+      tag={item.tag}
+      username={item.username}
+      profilePic={item.profilePic}
+      content={item.content}
+      timestamp={item.timestamp}
+      likes={item.likes}
+    />
+  )}
+  contentContainerStyle={styles.listContainer}
+/>
     </View>
   );
 }
