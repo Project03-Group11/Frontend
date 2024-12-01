@@ -171,7 +171,7 @@ export default function ProfilePage() {
         }
   };
 return (
-  <View style={styles.appContainer}>
+  <ScrollView style={styles.appContainer}>
     <Modal
       animationType="slide"
       transparent={true}
@@ -249,7 +249,7 @@ return (
         </View>
       </View>
     </View>
-  </View>
+  </ScrollView>
 );
 
 }

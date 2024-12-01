@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     postContainer: {
         marginBottom: 20,
         padding: 15,
-        backgroundColor: '#fff',
+        backgroundColor: '#fff8f0',
         borderRadius: 10,
         shadowColor: '#000',
         shadowOpacity: 0.1,
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     commentContainer: {
         marginVertical: 10,
         padding: 15,
-        backgroundColor: '#fff',
+        backgroundColor: '#fff8f0',
         borderRadius: 12,
         shadowColor: '#000',
         shadowOpacity: 0.1,

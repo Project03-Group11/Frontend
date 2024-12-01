@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { Platform, View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert, Modal } from 'react-native';
 import styles from './JoinClubPageStyles';
 
 const JoinClubPage = () => {
@@ -14,6 +14,8 @@ const JoinClubPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [allClubs, setAllClubs] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
     const fetchAllClubs = async () => {
@@ -83,7 +85,8 @@ const JoinClubPage = () => {
       const isAlreadyMember = memberships.some((membership) => membership.clubId === clubId);
       
       if (isAlreadyMember) {
-        Alert.alert('Already a member', 'You are already a member of this club.');
+        setModalMessage('You have already joined this club.');
+        setModalVisible(true);
         return; 
       }
         const joinResponse = await fetch('https://group11be-29e4f568939f.herokuapp.com/api/member/add', {
@@ -103,17 +106,36 @@ const JoinClubPage = () => {
   
       const joinData = await joinResponse.json();
       console.log('Successfully joined the club:', joinData);
-      Alert.alert('Success', 'You have successfully joined the club!');
+      setModalMessage('You have successfully joined the club!');
+      setModalVisible(true);
     } catch (error) {
       console.error('Error joining the club:', error);
-      Alert.alert('Error', error.message);
+      setModalMessage('An error occurred while trying to join the club.');
+      setModalVisible(true);
     }
   };
   
 
   return (
     <View style={styles.clubSearchContainer}>
-
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.searchBar}>
         <TextInput
           style={styles.searchInput}
