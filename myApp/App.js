@@ -12,6 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 import Homepage from './screens/Homepage';
 import ProfilePage from './screens/ProfilePage';
 import CommentsScreen from './screens/Comment';
+import BookSearchScreen from './screens/BookSearch'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -89,6 +90,11 @@ function MainTabs() {
             component={ProfilePage} // Replace with actual Profile screen
             options={{ title: 'Profile' }}
           />
+          <Tab.Screen
+            name="BookSearch"
+            component={BookSearchScreen} // Replace with actual Profile screen
+            options={{ title: 'Book Search' }}
+          />
         </>
       )}
     </Tab.Navigator>
@@ -111,6 +117,11 @@ export default function App() {
           name="Comments"
           component={CommentsScreen}
           options={{ title: 'Comments' }}
+        />
+        <Stack.Screen
+          name="BookSearch"
+          component={BookSearchScreen}
+          options={{ title: 'Book Search' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
