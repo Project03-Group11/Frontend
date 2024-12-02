@@ -54,13 +54,13 @@ const styles = StyleSheet.create({
   userInfoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,  // Space between user info and post content
+    marginBottom: 8,  
   },
   profilePic: {
     width: 40,
     height: 40,
-    borderRadius: 20,  // Circular profile picture
-    marginRight: 10,  // Space between profile picture and username
+    borderRadius: 20,  
+    marginRight: 10,  
   },
   username: {
     fontWeight: '700',
@@ -113,30 +113,103 @@ const styles = StyleSheet.create({
   filterContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#f4e7d1',
-    borderRadius: 8,
-    marginBottom: 15,
+    paddingHorizontal: 10,  
+    paddingVertical: 1,  
+    backgroundColor: '#f4e7d1',  
+    borderRadius: 8, 
+    marginBottom: 12, 
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  filterLabel: {
-    fontSize: 16,
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.08, 
+    shadowRadius: 4, 
+    elevation: 2, 
+},
+filterLabel: {
+    fontSize: 14,  
     color: '#8b5e3c',
     fontWeight: '700',
-    marginRight: 10,
-  },
-  picker: {
-    height: 40,
-    width: width * 0.5,  // Dynamic width based on screen size (50% of the screen width)
+    marginRight: 10,  
+},
+sortPicker: {
+    height: 35, 
+    width: width * 0.2,  
     backgroundColor: '#fff',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
+},
+  //post styles
+  createPostContainer: {
+    width: '85%', 
+    maxWidth: width * 0.95, 
+    minWidth: width * 0.8, 
+    padding: 12, 
+    backgroundColor: '#fff', 
+    marginVertical: 8, 
+    borderRadius: 12, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.08, 
+    shadowRadius: 4, 
+    elevation: 2, 
+    alignSelf: 'center',
   },
+  createPostHeader: {
+    fontSize: 16, 
+    fontWeight: '700', 
+    color: '#333', 
+    marginBottom: 8, 
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#787575',
+    borderRadius: 8,
+    padding: 8, 
+    fontSize: 14, 
+    backgroundColor: '#dbd9d9',
+    marginBottom: 12, 
+    minHeight: 50, 
+    textAlignVertical: 'top',
+  },
+  pickerAndButtonContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    width: '100%',
+  },
+  pickerContainer: {
+    flex: 1, 
+    marginRight: 10,
+  },
+  pickerLabel: {
+    fontSize: 14,
+    color: '#8b5e3c', 
+    fontWeight: '600', 
+  },
+  createPostPicker: {
+    height: 35, 
+    width: '40%', 
+    backgroundColor: '#fff', 
+    borderRadius: 8, 
+    borderWidth: 1, 
+    borderColor: '#ddd',
+  },
+  postButton: {
+    backgroundColor: '#a2755b', 
+    paddingVertical: 6, 
+    paddingHorizontal: 15, 
+    borderRadius: 8, 
+    alignItems: 'center', 
+    height: 50,
+    justifyContent: 'center',
+  },
+  postButtonText: {
+    color: '#fff', 
+    fontSize: 14, 
+    fontWeight: '700',
+  },
+  
 });
 
 export default styles;
+
