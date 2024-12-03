@@ -14,6 +14,7 @@ import ProfilePage from './screens/ProfilePage';
 import CommentsScreen from './screens/Comment';
 import JoinClubPage from './screens/JoinClubPage';
 import BookSearchForClubPage from './screens/BookSearchForClub';
+import BookSearchPage from './screens/BookSearch';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,6 +97,11 @@ function MainTabs() {
             name="Profile"
             component={ProfilePage}
             options={{ title: 'Profile' }}
+          />
+          <Tab.Screen
+            name="BookSearchPage"
+            component={BookSearchPage}
+            options={{ title: 'Book Search' }}
           />
         </>
       )}
