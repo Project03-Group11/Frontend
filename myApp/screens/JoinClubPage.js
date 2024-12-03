@@ -26,18 +26,17 @@ const JoinClubPage = () => {
         }
         const data = await response.json();
 
-        // Fetch the book covers and add them to the club data
         const clubsWithCovers = await Promise.all(data.map(async (club) => {
           const bookResponse = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/book/get/${club.bookId}`);
           const bookData = await bookResponse.json();
           return {
             ...club,
-            coverImg: bookData.coverImg, // Add the coverImg to each club's data
+            coverImg: bookData.coverImg, 
           };
         }));
 
-        setResults(clubsWithCovers); // Initially show all clubs with cover images
-        setAllClubs(clubsWithCovers); // Store all clubs for reference
+        setResults(clubsWithCovers); 
+        setAllClubs(clubsWithCovers); 
       } catch (error) {
         Alert.alert('Error', error.message);
       }
@@ -49,7 +48,7 @@ const JoinClubPage = () => {
   const handleSearch = async (term) => {
     try {
       if (term.trim() === '') {
-        setResults(allClubs); // Show all clubs when search is empty
+        setResults(allClubs); 
         return;
       }
 
@@ -59,7 +58,7 @@ const JoinClubPage = () => {
       }
       const data = await response.json();
       
-      // Add book cover images to the filtered results
+      
       const filteredClubsWithCovers = await Promise.all(data.map(async (club) => {
         const bookResponse = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/book/get/${club.bookId}`);
         const bookData = await bookResponse.json();
@@ -69,7 +68,7 @@ const JoinClubPage = () => {
         };
       }));
 
-      setResults(filteredClubsWithCovers); // Show filtered results with cover images
+      setResults(filteredClubsWithCovers); 
     } catch (error) {
       Alert.alert('Error', error.message);
     }
@@ -106,7 +105,7 @@ const JoinClubPage = () => {
   
       const joinData = await joinResponse.json();
       console.log('Successfully joined the club:', joinData);
-      setModalMessage('You have successfully joined the club!');
+      setModalMessage('Successfully joined the club!');
       setModalVisible(true);
     } catch (error) {
       console.error('Error joining the club:', error);
@@ -143,7 +142,7 @@ const JoinClubPage = () => {
           value={searchTerm}
           onChangeText={(text) => {
             setSearchTerm(text);
-            handleSearch(text); // Calls to update the search
+            handleSearch(text); 
           }}
         />
       </View>
@@ -154,7 +153,7 @@ const JoinClubPage = () => {
             <Text style={styles.clubName}>{club.name}</Text>
             <View style={styles.clubDetails}>
               <Image
-                source={{ uri: club.coverImg }} // Now use coverImg directly from club data
+                source={{ uri: club.coverImg }} 
                 style={styles.clubImage}
               />
               <View style={styles.clubTextContainer}>

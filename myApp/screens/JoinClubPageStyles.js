@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     top: 0,
     width: '100%',
     backgroundColor: '#3e2a1c',
-    paddingVertical: 18, // Increased padding
+    paddingVertical: 18, 
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
 
   navbarTitle: {
-    fontSize: 26, // Increased font size
+    fontSize: 26, 
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
@@ -30,16 +30,16 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     justifyContent: 'center',
-    margin: 0, // Increased margin
+    margin: 0, 
   },
 
   searchInput: {
     width: '60%',
-    padding: 12, // Increased padding
+    padding: 12, 
     borderWidth: 1,
     borderColor: '#d4b59e',
-    borderRadius: 6, // Slightly increased border radius
-    fontSize: 18, // Increased font size
+    borderRadius: 6, 
+    fontSize: 18, 
     backgroundColor: '#fff',
   },
 
@@ -47,28 +47,28 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: 50, // Increased marginTop for more space
+    marginTop: 50, 
   },
 
   clubCard: {
     backgroundColor: '#fff8f0',
-    borderRadius: 10, // Increased border radius
+    borderRadius: 10, 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 6, // Slightly larger shadow radius
+    shadowRadius: 6, 
     elevation: 4,
-    padding: 25, // Increased padding
-    marginVertical: 20, // Increased margin
+    padding: 25, 
+    marginVertical: 20, 
     width: '90%',
-    maxWidth: 650, // Increased maxWidth
+    maxWidth: 650, 
   },
 
   clubName: {
-    fontSize: 24, // Increased font size
+    fontSize: 24, 
     color: '#3e2a1c',
     fontWeight: 'bold',
-    marginBottom: 12, // Increased margin
+    marginBottom: 12, 
   },
 
   clubDetails: {
@@ -77,10 +77,10 @@ const styles = StyleSheet.create({
   },
 
   clubImage: {
-    width: 90, // Increased width
-    height: 135, // Increased height
-    borderRadius: 10, // Increased border radius
-    marginRight: 18, // Increased margin
+    width: 90, 
+    height: 135, 
+    borderRadius: 10,
+    marginRight: 18, 
   },
 
   clubTextContainer: {
@@ -90,14 +90,14 @@ const styles = StyleSheet.create({
   summary: {
     fontStyle: 'italic',
     color: '#555',
-    marginBottom: 12, // Increased margin
+    marginBottom: 12, 
   },
 
   joinButton: {
     backgroundColor: '#d4b59e',
-    paddingVertical: 10, // Increased vertical padding
-    paddingHorizontal: 18, // Increased horizontal padding
-    borderRadius: 6, // Slightly increased border radius
+    paddingVertical: 10, 
+    paddingHorizontal: 18, 
+    borderRadius: 6, 
   },
 
   joinButtonText: {
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     width: width * 0.1 ,
-    height: width * 0.04,
+    height: width * 0.044,
     backgroundColor: '#d4b59e',
     padding: 10,
     borderRadius: 5,

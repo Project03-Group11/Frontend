@@ -83,10 +83,10 @@ const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) 
 export default function Homepage() {
   if(Platform.OS==='web'){
     userData=JSON.parse(localStorage.getItem('userData'));
-    console.log(userData);
+    // console.log(userData);
   }else{
     userData=JSON.parse(SecureStore.getItem('userData'));
-    console.log(userData);
+    // console.log(userData);
   }
 
   const [posts, setPosts] = useState([]);
