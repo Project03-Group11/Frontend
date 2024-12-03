@@ -157,6 +157,54 @@ export default function ProfilePage() {
           </View>
         </View>
       </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={newClubModalVisible}
+        onRequestClose={() => setNewClubModalVisible(!newClubModalVisible)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Create New Club</Text>
+            <TextInput
+              placeholder="Club Name"
+              style={styles.input}
+              onChangeText={setClubName}
+              value={clubName}
+            />
+            <TextInput
+              style={styles.inputDescription}
+              placeholder="Enter club description..."
+              placeholderTextColor="#a59b8c"
+              multiline={true}
+              numberOfLines={6}
+              value={clubDescription}
+              onChangeText={setClubDescription}
+            />
+            <TouchableOpacity
+              style={styles.bookButton}
+              onPress={() => {
+                setNewClubModalVisible(false); // Close the modal
+                navigation.navigate('BookSearch', {
+                  clubName,
+                  clubDescription,
+                  userId,
+                  searchUsage: "create",
+                  onSelectBook: (book) => setCurrentBook(book), // Pass the selected book object
+                });
+              }}
+            >
+              <Text style={styles.textStyle}>Search for Book</Text>
+            </TouchableOpacity>
+
+            <View style={styles.buttonsContainer}>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setNewClubModalVisible(false)}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <View style={styles.profileContainer}>
         <View style={styles.profileHeader}>
@@ -173,7 +221,7 @@ export default function ProfilePage() {
         <View style={styles.clubsSection}>
           <Text style={styles.sectionTitle}>My Clubs</Text>
           <FlatList
-            data={usermemberclubs}
+            data={user.clubs}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={styles.ownedClubItem}>
@@ -201,6 +249,6 @@ export default function ProfilePage() {
           />
         </View>
       </View>
-    </ScrollView>
+</ScrollView>
   );
 }
