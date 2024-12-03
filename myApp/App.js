@@ -12,6 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 import Homepage from './screens/Homepage';
 import ProfilePage from './screens/ProfilePage';
 import CommentsScreen from './screens/Comment';
+import BookSearchForClubPage from './screens/BookSearchForClub';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,8 +45,59 @@ const useAuth = () => {
   return isAuthenticated;
 };
 
+// function MainTabs() {
+//   const isAuthenticated = useAuth();
+//   return (
+//     <Tab.Navigator
+//       screenOptions={{
+//         tabBarStyle: {
+//           backgroundColor: '#c9ad9d',
+//         },
+//         tabBarActiveTintColor: '#8b5e3c',
+//         tabBarInactiveTintColor: '#9c6644',
+//         headerStyle: {
+//           backgroundColor: '#c9ad9d',
+//         },
+//         headerTintColor: '#8b5e3c',
+//         headerTitleStyle: {
+//           fontWeight: 'bold',
+//         },
+//       }}
+//     >
+//       {!isAuthenticated ? (
+//         PlatformUsed === 'web' ? (
+//           <Tab.Screen
+//             name="WebLogin"
+//             component={GoogleSignInWeb}
+//             options={{ title: 'Web Login' }}
+//           />
+//         ) : (
+//           <Tab.Screen
+//             name="AppLogin"
+//             component={GoogleSignInExpo}
+//             options={{ title: 'App Login' }}
+//           />
+//         )
+//       ) : (
+//         <>
+//           <Tab.Screen
+//             name="Homepage"
+//             component={Homepage}
+//             options={{ title: 'HomePage' }}
+//           />
+//           <Tab.Screen
+//             name="Profile"
+//             component={ProfilePage} // Replace with actual Profile screen
+//             options={{ title: 'Profile' }}
+//           />
+//         </>
+//       )}
+//     </Tab.Navigator>
+//   );
+// }
+
 function MainTabs() {
-  const isAuthenticated= useAuth();
+  const isAuthenticated = useAuth();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -86,7 +138,7 @@ function MainTabs() {
           />
           <Tab.Screen
             name="Profile"
-            component={ProfilePage} // Replace with actual Profile screen
+            component={ProfilePage}
             options={{ title: 'Profile' }}
           />
         </>
@@ -94,6 +146,7 @@ function MainTabs() {
     </Tab.Navigator>
   );
 }
+
 
 
 export default function App() {
@@ -111,6 +164,11 @@ export default function App() {
           name="Comments"
           component={CommentsScreen}
           options={{ title: 'Comments' }}
+        />
+        <Stack.Screen
+          name="BookSearch"
+          component={BookSearchForClubPage}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
