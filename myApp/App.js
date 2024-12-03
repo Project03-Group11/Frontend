@@ -12,6 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 import Homepage from './screens/Homepage';
 import ProfilePage from './screens/ProfilePage';
 import CommentsScreen from './screens/Comment';
+import BookSearchForClubPage from './screens/BookSearchForClub';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,8 +45,9 @@ const useAuth = () => {
   return isAuthenticated;
 };
 
+
 function MainTabs() {
-  const isAuthenticated= useAuth();
+  const isAuthenticated = useAuth();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -86,7 +88,7 @@ function MainTabs() {
           />
           <Tab.Screen
             name="Profile"
-            component={ProfilePage} // Replace with actual Profile screen
+            component={ProfilePage}
             options={{ title: 'Profile' }}
           />
         </>
@@ -94,6 +96,7 @@ function MainTabs() {
     </Tab.Navigator>
   );
 }
+
 
 
 export default function App() {
@@ -111,6 +114,11 @@ export default function App() {
           name="Comments"
           component={CommentsScreen}
           options={{ title: 'Comments' }}
+        />
+        <Stack.Screen
+          name="BookSearch"
+          component={BookSearchForClubPage}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
