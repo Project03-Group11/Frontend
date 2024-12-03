@@ -94,14 +94,14 @@ function MainTabs() {
             options={{ title: 'Join Club' }}
           />
           <Tab.Screen
-            name="Profile"
-            component={ProfilePage}
-            options={{ title: 'Profile' }}
-          />
-          <Tab.Screen
             name="BookSearchPage"
             component={BookSearchPage}
             options={{ title: 'Book Search' }}
+          />
+          <Tab.Screen
+            name="Profile"
+            component={ProfilePage}
+            options={{ title: 'Profile' }}
           />
         </>
       )}
