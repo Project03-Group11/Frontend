@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     maxHeight:250,
     padding: width * 0.03,  // Dynamic padding based on screen size (5% of the screen width)
     marginVertical: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff8f0',
     borderRadius: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
