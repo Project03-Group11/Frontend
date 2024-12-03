@@ -21,6 +21,8 @@ export default function ProfilePage() {
   const [user, setUser] = useState({});
   const [searchUsage, setsearchUsage] = useState('');
   const [clubs, setClubs] = useState([]);
+  const [userClubs, setuserClubs] = useState([]);
+
 
   const handleRefresh = () => {
     navigation.reset({
@@ -66,8 +68,20 @@ export default function ProfilePage() {
       }
     };
 
+    const fetchClubsOwnedByUser = async () => {
+      try {
+        const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/club/get/user/${userId}`);
+        const data = await response.json();
+        setuserClubs(data);  // Set the clubs the user owns
+      } catch (error) {
+        console.error("Error fetching owned clubs:", error);
+      }
+    };
+
+
     fetchUser();
     fetchAllClubs();
+    fetchClubsOwnedByUser();
   }, []);
 
   const handleSaveUsername = async () => {
@@ -197,11 +211,21 @@ export default function ProfilePage() {
           />
         </View>
 
-        <View>
+        <View >
           <Text style={styles.sectionTitle}>Clubs I Own</Text>
           <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
             <Text style={styles.addButtonText}>+ Add New Club</Text>
           </TouchableOpacity>
+          <FlatList
+            data={userClubs}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.ownedClubItem}>
+                <Text style={styles.myClubName}>{item.name}</Text>
+                <Text style={styles.myCurrentRead}>{item.description}</Text>
+              </View>
+            )}
+          />
         </View>
       </View>
     </View>

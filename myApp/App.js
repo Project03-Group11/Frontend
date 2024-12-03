@@ -45,56 +45,6 @@ const useAuth = () => {
   return isAuthenticated;
 };
 
-// function MainTabs() {
-//   const isAuthenticated = useAuth();
-//   return (
-//     <Tab.Navigator
-//       screenOptions={{
-//         tabBarStyle: {
-//           backgroundColor: '#c9ad9d',
-//         },
-//         tabBarActiveTintColor: '#8b5e3c',
-//         tabBarInactiveTintColor: '#9c6644',
-//         headerStyle: {
-//           backgroundColor: '#c9ad9d',
-//         },
-//         headerTintColor: '#8b5e3c',
-//         headerTitleStyle: {
-//           fontWeight: 'bold',
-//         },
-//       }}
-//     >
-//       {!isAuthenticated ? (
-//         PlatformUsed === 'web' ? (
-//           <Tab.Screen
-//             name="WebLogin"
-//             component={GoogleSignInWeb}
-//             options={{ title: 'Web Login' }}
-//           />
-//         ) : (
-//           <Tab.Screen
-//             name="AppLogin"
-//             component={GoogleSignInExpo}
-//             options={{ title: 'App Login' }}
-//           />
-//         )
-//       ) : (
-//         <>
-//           <Tab.Screen
-//             name="Homepage"
-//             component={Homepage}
-//             options={{ title: 'HomePage' }}
-//           />
-//           <Tab.Screen
-//             name="Profile"
-//             component={ProfilePage} // Replace with actual Profile screen
-//             options={{ title: 'Profile' }}
-//           />
-//         </>
-//       )}
-//     </Tab.Navigator>
-//   );
-// }
 
 function MainTabs() {
   const isAuthenticated = useAuth();
@@ -104,8 +54,8 @@ function MainTabs() {
         tabBarStyle: {
           backgroundColor: '#c9ad9d',
         },
-        tabBarActiveTintColor: '#8b5e3c',
-        tabBarInactiveTintColor: '#9c6644',
+        tabBarActiveTintColor: '#ebe8e6',
+        tabBarInactiveTintColor: '#919090',
         headerStyle: {
           backgroundColor: '#c9ad9d',
         },
