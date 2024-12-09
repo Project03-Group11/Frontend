@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, Pressable, Platform } from 'react-na
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
 import * as SecureStore from 'expo-secure-store';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default function CreatePost({ onPostCreated }) {
   const [postText, setPostText] = useState('');
@@ -62,6 +63,42 @@ export default function CreatePost({ onPostCreated }) {
     }
   };
 
+  if(Platform.OS ==='web'){
+    return (
+      <View style={styles.createPostContainer}>
+        <Text style={styles.createPostHeader}>Create Post</Text>
+        
+        <TextInput
+          style={styles.textInput}
+          placeholder="What's on your mind...?"
+          value={postText}
+          onChangeText={setPostText}
+          multiline
+        />
+  
+        <View style={styles.pickerAndButtonContainer}>
+          <View style={styles.pickerContainer}>
+            <Text style={styles.pickerLabel}>Club:</Text>
+            <Picker
+              selectedValue={selectedClub}
+              style={styles.createPostPicker}
+              onValueChange={(itemValue) => setSelectedClub(itemValue)}
+            >
+              <Picker.Item label="Select a club..." value="" />
+              {clubList.map((club) => (
+                <Picker.Item key={club.id} label={club.name} value={club.id} />
+              ))}
+            </Picker>
+          </View>
+  
+          <Pressable style={styles.postButton} onPress={handlePostSubmit}>
+            <Text style={styles.postButtonText}>Post</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.createPostContainer}>
       <Text style={styles.createPostHeader}>Create Post</Text>
@@ -77,16 +114,24 @@ export default function CreatePost({ onPostCreated }) {
       <View style={styles.pickerAndButtonContainer}>
         <View style={styles.pickerContainer}>
           <Text style={styles.pickerLabel}>Club:</Text>
-          <Picker
-            selectedValue={selectedClub}
-            style={styles.createPostPicker}
-            onValueChange={(itemValue) => setSelectedClub(itemValue)}
-          >
-            <Picker.Item label="Select a club..." value="" />
-            {clubList.map((club) => (
-              <Picker.Item key={club.id} label={club.name} value={club.id} />
-            ))}
-          </Picker>
+          <View style={styles.dropdownContainer}>
+            <RNPickerSelect 
+              onValueChange={(value) => {
+                // console.log('Selected Value:', value);
+                setSelectedClub(value);
+              }}
+              value={selectedClub}
+              items={[
+                { label: 'Select a club...', value: '' }, // Placeholder option
+                ...clubList.map((club) => ({ label: club.name, value: club.id })), // Dynamically map clubList
+              ]}
+              placeholder={{}}
+              style={{
+                inputIOS: styles.inputIOS,
+                inputAndroid: styles.inputAndroid,
+              }}
+            />
+          </View>
         </View>
 
         <Pressable style={styles.postButton} onPress={handlePostSubmit}>

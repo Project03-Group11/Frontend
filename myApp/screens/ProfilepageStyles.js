@@ -299,13 +299,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logoutButtonA: {
-    backgroundColor: '#dc3545',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 5,
   },
   logoutButtonTextA: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
   },
   listSectionA: {
@@ -342,7 +341,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   addButtonA: {
-    backgroundColor: '#28a745',
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 5,
@@ -350,7 +348,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   addButtonTextA: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 16,
   },

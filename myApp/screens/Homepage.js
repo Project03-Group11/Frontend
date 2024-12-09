@@ -5,6 +5,8 @@ import styles from './HomepageStyles';
 import { useNavigation } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import CreatePost from './CreatePost';
+import RNPickerSelect from 'react-native-picker-select';
+
 
 const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) => {
   const [liked, setLiked] = useState(false);
@@ -191,37 +193,88 @@ export default function Homepage() {
     fetchPosts();
   };
 
+  if(Platform.OS ==="web"){
+    return (
+      <View style={styles.container}>
+        <View style={styles.filterContainer}>
+          <Text style={styles.filterLabel}>Sort By:</Text>
+          <Picker style={styles.sortPicker}
+            selectedValue={sortOrder}
+            onValueChange={(itemValue) => setSortOrder(itemValue)}
+          >
+            <Picker.Item label="Newest to Oldest" value="newest" />
+            <Picker.Item label="Oldest to Newest" value="oldest" />
+          </Picker>
+        </View>
+  
+        <CreatePost onPostCreated={handleRefresh()}/>
+  
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.postId}
+          renderItem={({ item }) => (
+            <Post
+              postId={item.postId}
+              tag={item.tag}
+              username={item.username}
+              profilePic={item.profilePic}
+              content={item.content}
+              timestamp={item.timestamp}
+              likes={item.likes}
+            />
+          )}
+          contentContainerStyle={styles.listContainer}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
         <Text style={styles.filterLabel}>Sort By:</Text>
-        <Picker style={styles.sortPicker}
-          selectedValue={sortOrder}
-          onValueChange={(itemValue) => setSortOrder(itemValue)}
-        >
-          <Picker.Item label="Newest to Oldest" value="newest" />
-          <Picker.Item label="Oldest to Newest" value="oldest" />
-        </Picker>
+        <View style={styles.dropdownContainer}>
+          <RNPickerSelect 
+            onValueChange={(value) => {
+              // console.log('Selected Value:', value);
+              setSortOrder(value);
+            }}
+            value={sortOrder}
+            items={[
+              { label: 'Newest to Oldest', value: 'newest' },
+              { label: 'Oldest to Newest', value: 'oldest' },
+            ]}
+            placeholder={{
+              label: 'Select an option...', // Placeholder text
+              value: null, // Placeholder value
+              color: '#FF0000',
+            }}
+            style={{
+              inputIOS: styles.inputIOS,
+              inputAndroid: styles.inputAndroid,
+            }}
+          />
+        </View>
       </View>
 
-<CreatePost onPostCreated={handleRefresh()}/>
+      <CreatePost onPostCreated={handleRefresh()}/>
 
-<FlatList
-  data={posts}
-  keyExtractor={(item) => item.postId}
-  renderItem={({ item }) => (
-    <Post
-      postId={item.postId}
-      tag={item.tag}
-      username={item.username}
-      profilePic={item.profilePic}
-      content={item.content}
-      timestamp={item.timestamp}
-      likes={item.likes}
-    />
-  )}
-  contentContainerStyle={styles.listContainer}
-/>
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.postId}
+        renderItem={({ item }) => (
+          <Post
+            postId={item.postId}
+            tag={item.tag}
+            username={item.username}
+            profilePic={item.profilePic}
+            content={item.content}
+            timestamp={item.timestamp}
+            likes={item.likes}
+          />
+        )}
+        contentContainerStyle={styles.listContainer}
+      />
     </View>
   );
 }

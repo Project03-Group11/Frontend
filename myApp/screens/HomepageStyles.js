@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,  
-    paddingVertical: 1,  
+    paddingVertical: 8,  
     backgroundColor: '#f4e7d1',  
     borderRadius: 8, 
     marginBottom: 12, 
@@ -123,12 +123,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08, 
     shadowRadius: 4, 
     elevation: 2, 
+    height: 70, // Added height to ensure dropdown fits well
+    zIndex: 1000,
+    width:'100%'
 },
 filterLabel: {
-    fontSize: 14,  
+    fontSize: 16,  
     color: '#8b5e3c',
     fontWeight: '700',
-    marginRight: 10,  
+    marginRight: 10,
+    // flexShrink: 1,  
 },
 sortPicker: {
     height: 35, 
@@ -137,6 +141,8 @@ sortPicker: {
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
+    flex:1,
+    paddingHorizontal: 10,
 },
   //post styles
   createPostContainer: {
@@ -176,10 +182,12 @@ sortPicker: {
     alignItems: 'center', 
     justifyContent: 'space-between', 
     width: '100%',
+    // height: 100,
   },
   pickerContainer: {
     flex: 1, 
     marginRight: 10,
+    // flexDirection:'row',
   },
   pickerLabel: {
     fontSize: 14,
@@ -208,7 +216,42 @@ sortPicker: {
     fontSize: 14, 
     fontWeight: '700',
   },
-  
+  inputIOS: {
+    height: 60, // Match height with iOS
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    color: '#333', // Text color
+  },
+  inputAndroid: {
+    height: 60, // Match height with iOS
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    color: '#333', // Text color
+  },
+  dropdownContainer: {
+    width: '80%', // Make the dropdown take full width
+    paddingHorizontal: 16, // Add padding to match design consistency
+    marginVertical: 10, // Add vertical spacing
+    backgroundColor: '#fff',
+    height: 60,
+  },
+  label: {
+    marginBottom: 10,
+    fontSize: 18,
+    color: '#333',
+    justifyContent: 'center', 
+    alignSelf: 'center',
+    fontWeight:'bold',
+  },
+
 });
 
 export default styles;

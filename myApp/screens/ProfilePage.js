@@ -190,7 +190,7 @@ export default function ProfilePage() {
                   navigation.navigate('BookSearch', {
                     clubName,
                     clubDescription,
-                    userId,
+                    // userId,
                     searchUsage: "create",
                     onSelectBook: (book) => setCurrentBook(book), // Pass the selected book object
                   });

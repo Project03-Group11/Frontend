@@ -172,6 +172,8 @@ const JoinClubPage = () => {
       </ScrollView>
     </View>
   );
+
+  
 };
 
 export default JoinClubPage;
