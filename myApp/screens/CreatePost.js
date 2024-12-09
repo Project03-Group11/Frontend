@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Pressable, Picker, Platform } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, Platform } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
+import * as SecureStore from 'expo-secure-store';
 
 export default function CreatePost({ onPostCreated }) {
   const [postText, setPostText] = useState('');

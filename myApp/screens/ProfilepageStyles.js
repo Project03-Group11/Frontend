@@ -268,6 +268,162 @@ const styles = StyleSheet.create({
   },
 
 
+  //APP 
+  appContainer: {
+    flex: 1,
+    backgroundColor: '#faf3e9',
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  profileHeaderA: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  profilePictureA: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
+  usernameA: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  editProfileButtonA: {
+    backgroundColor: '#d4b59e',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  logoutButtonA: {
+    backgroundColor: '#dc3545',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+  },
+  logoutButtonTextA: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  listSectionA: {
+    marginBottom: 20,
+  },
+  sectionTitleA: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  clubItemA: {
+    backgroundColor: '#fff8f0',
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  clubNameA: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  clubDescriptionA: {
+    fontSize: 14,
+    color: '#666',
+  },
+  emptyMessageA: {
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#999',
+    marginTop: 20,
+  },
+  addButtonA: {
+    backgroundColor: '#28a745',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  addButtonTextA: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  centeredViewA: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalViewA: {
+    width: '90%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTextA: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  inputA: {
+    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+  inputDescriptionA: {
+    width: '100%',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    textAlignVertical: 'top', // Ensures text starts at the top of multiline input
+  },
+  buttonA: {
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonCloseA: {
+    backgroundColor: '#007bff',
+  },
+  textStyleA: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  bookButtonA: {
+    backgroundColor: '#17a2b8',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    width: '100%',
+  },
+
+
 });
 
 export default styles;

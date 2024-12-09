@@ -3,6 +3,7 @@ import {Platform, View, Text, FlatList, StyleSheet, Pressable, Image } from 'rea
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
 import { useNavigation } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store';
 import CreatePost from './CreatePost';
 
 const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) => {
@@ -126,7 +127,7 @@ export default function Homepage() {
           if(Platform.OS==='web'){
             localStorage.setItem("userId",data.id);
           }else{
-            SecureStore.setItem("userId",data.id);
+            SecureStore.setItem("userId",JSON.stringify(data.id));
           }
         } catch (error) {
           console.error("Error fetching user id:", error);

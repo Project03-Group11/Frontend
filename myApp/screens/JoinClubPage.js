@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert, Modal } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import styles from './JoinClubPageStyles';
 
 const JoinClubPage = () => {
