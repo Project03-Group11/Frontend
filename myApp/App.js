@@ -78,13 +78,24 @@ function MainTabs() {
           <Tab.Screen
             name="WebLogin"
             component={GoogleSignInWeb}
-            options={{ title: 'Web Login' }}
+            options={{ 
+              title: 'Web Login', 
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="login" size={size} color={color} />
+              ),
+            }}
           />
         ) : (
           <Tab.Screen
             name="AppLogin"
             component={GoogleSignInExpo}
-            options={{ title: 'App Login' }}
+            options={{ 
+              title: 'App Login',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="login" size={size} color={color} />
+              ), 
+            }}
+            
           />
         )
       ) : (
