@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, View, Text, Image, TouchableOpacity, FlatList, Alert, Modal, Pressable, TextInput, ActivityIndicator } from 'react-native';
+import { Platform, ScrollView,View, Text, Image, TouchableOpacity, FlatList, Alert, Modal, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import styles from "./ProfilepageStyles";
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-web';
+import * as SecureStore from 'expo-secure-store';
 
 export default function ProfilePage() {
   const navigation = useNavigation();
-
-  if (Platform.OS === 'web') {
-    userId = localStorage.getItem('userId');
-  } else {
-    userId = JSON.parse(SecureStore.getItem('userId'));
-  }
+  const [userId, setUserId] = useState(null);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [newClubModalVisible, setNewClubModalVisible] = useState(false);
@@ -24,6 +19,7 @@ export default function ProfilePage() {
   const [clubs, setClubs] = useState([]);
   const [userClubs, setuserClubs] = useState([]);
   const [usermemberclubs, setusermemberclubs] = useState([]);
+  const [resetFlag, setresetFlag] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Track loading state
 
   const handleRefresh = () => {
@@ -32,6 +28,31 @@ export default function ProfilePage() {
       routes: [{ name: 'MainTabs' }],
     });
   };
+
+  useEffect(() => {
+    const getUserId = async () => {
+      let userId = null;
+      try {
+        if (Platform.OS === 'web') {
+          userId = localStorage.getItem('userId');
+        } else {
+          userId = await JSON.stringify(SecureStore.getItemAsync('userId'));
+        }
+
+        if (userId) {
+          setUserId(userId);
+        } else {
+          console.error('User ID not found.');
+        }
+      } catch (error) {
+        console.error('Error getting user ID:', error);
+      } finally {
+        setIsLoading(false);  
+      }
+    };
+
+    getUserId();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -51,6 +72,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         // Fetch user details
         const userResponse = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/${userId}`);
         const userData = await userResponse.json();
@@ -72,22 +94,24 @@ export default function ProfilePage() {
         const memberClubsData = await memberClubsResponse.json();
 
         const memberClubs = memberClubsData.map(member => clubsData.find(club => club.id === member.clubId));
-        setusermemberclubs(memberClubs);
+
+        setusermemberclubs(memberClubsData);
 
         // Update user with member clubs
         setUser(prevUser => ({
           ...prevUser,
           clubs: memberClubs,
         }));
+
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setIsLoading(false); // Set loading to false after fetching data
+        setIsLoading(false); 
       }
     };
 
     fetchData();
-  }, []);
+  }, [resetFlag, userId]);
 
   const handleSaveUsername = async () => {
     if (!text.trim()) {
@@ -118,7 +142,36 @@ export default function ProfilePage() {
     }
   };
 
-  // Show loading spinner until data is loaded
+  const removeClub = async (clubID) => {
+    const member = usermemberclubs.find((club) => club.clubId === clubID);
+
+    if (!member) {
+      console.log(usermemberclubs)
+      console.error(`No member found for clubID ${clubID}`);
+      return;
+    }
+    console.log(member)
+
+    const memberID = member.id;
+    try {
+      const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/member/remove/${memberID}`, {
+        method: 'DELETE'
+      });
+  
+      if (response.ok) {
+        console.log(`Member with ID ${memberID} deleted successfully.`);
+        setresetFlag(!resetFlag);
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to delete post:', errorData.message || response.status);
+      }
+    } catch (error) {
+      console.error('An error occurred while deleting the post:', error);
+    }
+
+  }
+
+
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -128,7 +181,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <ScrollView style={styles.appContainer}>
+    <ScrollView style={styles.appContainer} contentContainerStyle={{ flexGrow: 1 }}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -206,6 +259,55 @@ export default function ProfilePage() {
         </View>
       </Modal>
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={newClubModalVisible}
+        onRequestClose={() => setNewClubModalVisible(!newClubModalVisible)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Create New Club</Text>
+            <TextInput
+              placeholder="Club Name"
+              style={styles.input}
+              onChangeText={setClubName}
+              value={clubName}
+            />
+            <TextInput
+              style={styles.inputDescription}
+              placeholder="Enter club description..."
+              placeholderTextColor="#a59b8c"
+              multiline={true}
+              numberOfLines={6}
+              value={clubDescription}
+              onChangeText={setClubDescription}
+            />
+            <TouchableOpacity
+              style={styles.bookButton}
+              onPress={() => {
+                setNewClubModalVisible(false); // Close the modal
+                navigation.navigate('BookSearch', {
+                  clubName,
+                  clubDescription,
+                  userId,
+                  searchUsage: "create",
+                  onSelectBook: (book) => setCurrentBook(book), // Pass the selected book object
+                });
+              }}
+            >
+              <Text style={styles.textStyle}>Search for Book</Text>
+            </TouchableOpacity>
+
+            <View style={styles.buttonsContainer}>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setNewClubModalVisible(false)}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.profileContainer}>
         <View style={styles.profileHeader}>
           <Image source={{ uri: user.profilePic }} style={styles.profilePicture} />
@@ -224,9 +326,17 @@ export default function ProfilePage() {
             data={user.clubs}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
+              <View>
               <View style={styles.ownedClubItem}>
                 <Text style={styles.myClubName}>{item.name}</Text>
                 <Text style={styles.myCurrentRead}>{item.description}</Text>
+                <TouchableOpacity style={styles.addButton} onPress={() => removeClub(item.id)}>
+                  <img src = "https://cdn-icons-png.flaticon.com/512/14090/14090261.png" style={styles.removeIcon}/>
+              </TouchableOpacity>
+              </View>
+              
+              
+              {/* https://cdn-icons-png.flaticon.com/512/14090/14090261.png */}
               </View>
             )}
           />
@@ -241,9 +351,14 @@ export default function ProfilePage() {
             data={userClubs}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
+              <View>
+              <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
+                  <Text style={styles.addButtonText}>Edit club</Text>
+                </TouchableOpacity>
               <View style={styles.ownedClubItem}>
                 <Text style={styles.myClubName}>{item.name}</Text>
                 <Text style={styles.myCurrentRead}>{item.description}</Text>
+              </View>
               </View>
             )}
           />

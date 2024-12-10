@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   appContainer: {
     backgroundColor: '#faf3e9', // soft coffee background
     flex: 1,
-    paddingTop: 30, // Offset for fixed navbar
+    paddingTop: 30,
   },
   profileContainer: {
     flex: 1,
@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     color: '#3e2a1c', // deep coffee color for text
   },
+  removeIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 1
+  },
   navbar: {
     position: 'absolute',
     top: 0,
@@ -25,8 +30,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     paddingVertical: 15,
     textAlign: 'center',
-    elevation: 5, // for shadow on Android
-    shadowColor: '#000', // for shadow on iOS
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -128,6 +133,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     color: '#3e2a1c',
     fontSize: 16,
+    marginRight:4,
+    maxWidth:200
 
   },
   myCurrentRead: {
@@ -138,6 +145,7 @@ const styles = StyleSheet.create({
     color: '#3e2a1c',
     fontSize: 14,
     maxWidth: 200,
+    marginLeft: 'auto'
   },
   ownedClubs: {
     marginBottom: 20,
@@ -237,8 +245,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
     width: '100%',
-    height: 150, // Increased height for longer descriptions
-    textAlignVertical: 'top', // Ensures text starts at the top
+    height: 150, 
+    textAlignVertical: 'top', 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -266,6 +274,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0', 
+  }
 
 
 });
