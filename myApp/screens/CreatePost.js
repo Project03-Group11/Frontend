@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable, Platform } from 'react-native';
-import { Picker } from '@react-native-web';
+import { Picker } from 'react-native-web';
 import styles from './HomepageStyles';
 import * as SecureStore from 'expo-secure-store';
 import RNPickerSelect from 'react-native-picker-select';
@@ -145,7 +145,7 @@ export default function CreatePost({ onPostCreated }) {
           <View style={styles.dropdownContainer}>
             <RNPickerSelect 
               onValueChange={(value) => {
-                // console.log('Selected Value:', value);
+                console.log('Selected Value:', value);
                 setSelectedClub(value);
               }}
               value={selectedClub}

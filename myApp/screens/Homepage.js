@@ -142,12 +142,21 @@ export default function Homepage() {
   }, []);
 
   // Fetch user ID by email
-    useEffect(() => {
+  useEffect(() => {
+    if (!userData.email) {
+      return;
+    }
       const fetchUserId = async () => {
         try {
-          const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/email/${userData.email}`);
-          const data = await response.json();
-          // setUserId(data.id);
+          const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/email/${userData.email}`);         
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const text = await response.text();
+          if (!text) {
+            throw new Error("Response body is empty");
+          }
+          const data = JSON.parse(text);
           if(Platform.OS==='web'){
             localStorage.setItem("userId",data.id);
           }else{

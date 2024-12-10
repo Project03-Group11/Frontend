@@ -38,7 +38,7 @@ export default function ProfilePage() {
         if (Platform.OS === 'web') {
           userId = localStorage.getItem('userId');
         } else {
-          userId = await JSON.stringify(SecureStore.getItemAsync('userId'));
+          userId = await SecureStore.getItemAsync('userId');
         }
 
         if (userId) {
@@ -72,6 +72,7 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
+    if (!userId) return; 
     const fetchData = async () => {
       try {
 
@@ -94,10 +95,13 @@ export default function ProfilePage() {
         // Fetch member clubs
         const memberClubsResponse = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/member/get/user/${userId}`);
         const memberClubsData = await memberClubsResponse.json();
+        if (!Array.isArray(memberClubsData)) {
+          console.error("memberClubsData is not an array:", memberClubsData);
+          return;
+        }
 
         const memberClubs = memberClubsData.map(member => clubsData.find(club => club.id === member.clubId));
-
-        setusermemberclubs(memberClubsData);
+        setusermemberclubs(memberClubs);
 
         // Update user with member clubs
         setUser(prevUser => ({
