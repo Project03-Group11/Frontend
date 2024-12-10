@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
   },
 
   resultsContainer: {
-    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: 50, 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import styles from './BookSearchForClubStyles';
+import * as SecureStore from 'expo-secure-store';
+
 
 export default function BookSearchForClubPage({ route, navigation }) {
     const { clubName, clubDescription, userId, searchUsage, clubId } = route.params; // Ensure clubId is passed if updating a club

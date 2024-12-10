@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     },
     bookSummary: {
       fontSize: 18,
-      color: '#777',
+      color: '#666',
       marginBottom: 8,
     },
     rowContainer: {
@@ -199,6 +199,35 @@ const styles = StyleSheet.create({
         fontWeight: '500', 
       },
       
+    filterRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      width: '100%',
+      marginTop: 10,
+    },
+    filterButton: {
+      flex: 1,
+      marginHorizontal: 5,
+      backgroundColor: '#ddd',
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 8,
+    },
+    activeFilterButton: {
+      flex: 1,
+      marginHorizontal: 5,
+      backgroundColor: '#d4c2ac',
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 8,
+    },
+    filterButtonText: {
+      color: '#333',
+      fontWeight: 'bold',
+    },
+    
   });
   
   

@@ -4,6 +4,7 @@ import { View, Text, Button, Image, StyleSheet, ActivityIndicator, Alert, Dimens
 import * as Google from 'expo-auth-session/providers/google';
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 const redirectUri = 'https://auth.expo.io/@sebasx5/myApp';
@@ -12,7 +13,7 @@ const androidClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googl
 const iosClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
 const expoClientId ='604488331524-7adg3sic5ljsej03mi6vdt43jo7dm3ps.apps.googleusercontent.com';
 
-export default function GoogleSignInScreen({ navigation }) {
+export default function GoogleSignInScreen() {
   const config={
             webClientId,
             expoClientId,
@@ -24,6 +25,7 @@ export default function GoogleSignInScreen({ navigation }) {
 
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigation= useNavigation();
 
     useEffect(() => {
         if (response?.type === 'success') {
@@ -59,7 +61,7 @@ export default function GoogleSignInScreen({ navigation }) {
             }
 
             setUserInfo(userData);
-            navigation.navigate('HomePage');
+            navigation.navigate('MainTabs', { screen: 'Homepage' });
         } catch (error) {
             console.error('Login error:', error);
             Alert.alert('Login Error', 'An error occurred during login. Please try again.');
@@ -67,6 +69,34 @@ export default function GoogleSignInScreen({ navigation }) {
             setLoading(false);
         }
     };
+
+    const handleRefresh = () => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MainTabs' }],
+        });
+    };
+    const mockLogin = async() => {
+        setLoading(true);
+        const userData = {
+            // email: "test4@gmail.com",
+            // username: "Eugene Douglas",
+            // profile_pic: "https://randomuser.me/api/portraits/men/17.jpg",
+            email: "jormoreno@csumb.edu",
+            username: "Jorge Moreno",
+            profile_pic: "https://lh3.googleusercontent.com/a/ACg8ocKkF4W9gs_Lz_GTZmoUmyXpvzmcP_ijAuteYUjvUYPDBr55Zto=s96-c",
+        };
+        try {
+            await SecureStore.setItemAsync('userData', JSON.stringify(userData));    
+            setUserInfo(userData);   
+            navigation.navigate('MainTabs', { screen: 'Homepage' });
+            handleRefresh();
+        } catch (error) {
+            console.error("Error during mock login:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -84,7 +114,8 @@ export default function GoogleSignInScreen({ navigation }) {
                     <Button 
                         style = {styles.googleButton}
                         title="Sign in with Google"
-                        onPress={() => promptAsync()}
+                        // onPress={() => promptAsync()}
+                        onPress={() => mockLogin()}
                         disabled={!request}
                     />
                 </View>
