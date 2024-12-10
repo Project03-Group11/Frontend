@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable, Platform } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from '@react-native-web';
 import styles from './HomepageStyles';
 import * as SecureStore from 'expo-secure-store';
 import RNPickerSelect from 'react-native-picker-select';
@@ -9,6 +9,7 @@ export default function CreatePost({ onPostCreated }) {
   const [postText, setPostText] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
   const [clubList, setClubList] = useState([]);
+  const[userClubs, setuserClubs]= useState([]);
 
   useEffect(() => {
     const fetchClubs = async () => {
@@ -22,6 +23,33 @@ export default function CreatePost({ onPostCreated }) {
     };
     fetchClubs();
   }, []);
+
+  useEffect(() => {
+    const getUserClubs = async () => {
+      var userID;
+      if(Platform.OS==='web'){
+        userID =localStorage.getItem("userId");
+      }else{
+        userID = await SecureStore.getItem("userId");
+      }
+
+      try {
+        const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/member/get/user/${userID}`);
+        const data = await response.json();
+
+        const memberClubs = clubList.filter(club =>  data.some(member => member.clubId === club.id));
+
+        console.log(memberClubs);
+
+        setuserClubs(memberClubs);
+
+      } catch (error) {
+        console.error("Error fetching clubs:", error);
+      }
+    }
+
+    getUserClubs();
+  },[clubList])
 
   const handlePostSubmit = async () => {
     if (!postText.trim() || !selectedClub) {
@@ -85,7 +113,7 @@ export default function CreatePost({ onPostCreated }) {
               onValueChange={(itemValue) => setSelectedClub(itemValue)}
             >
               <Picker.Item label="Select a club..." value="" />
-              {clubList.map((club) => (
+              {userClubs.map((club) => (
                 <Picker.Item key={club.id} label={club.name} value={club.id} />
               ))}
             </Picker>
@@ -123,7 +151,7 @@ export default function CreatePost({ onPostCreated }) {
               value={selectedClub}
               items={[
                 { label: 'Select a club...', value: '' }, // Placeholder option
-                ...clubList.map((club) => ({ label: club.name, value: club.id })), // Dynamically map clubList
+                ...userClubs.map((club) => ({ label: club.name, value: club.id })), // Dynamically map clubList
               ]}
               placeholder={{}}
               style={{

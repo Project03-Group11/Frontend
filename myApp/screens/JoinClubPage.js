@@ -17,6 +17,7 @@ const JoinClubPage = () => {
   const [allClubs, setAllClubs] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAllClubs = async () => {
@@ -40,6 +41,8 @@ const JoinClubPage = () => {
         setAllClubs(clubsWithCovers); 
       } catch (error) {
         Alert.alert('Error', error.message);
+      }finally {
+        setIsLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -114,6 +117,14 @@ const JoinClubPage = () => {
       setModalVisible(true);
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Platform, View, Text, FlatList, StyleSheet, Pressable, Image } from 'react-native';
+import {Platform, View, Text, FlatList, StyleSheet, Pressable, Image, ActivityIndicator } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
 import { useNavigation } from '@react-navigation/native';
@@ -84,18 +84,40 @@ const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) 
 
 
 export default function Homepage() {
-  if(Platform.OS==='web'){
-    userData=JSON.parse(localStorage.getItem('userData'));
-    // console.log(userData);
-  }else{
-    userData=JSON.parse(SecureStore.getItem('userData'));
-    // console.log(userData);
-  }
+  const [userData, setUserData] = useState({}); 
+  const [loading, setLoading] = useState(true);
 
   const [posts, setPosts] = useState([]);
   const [userMap, setUserMap] = useState({});
   const [clubMap, setClubMap] = useState({});
   const [sortOrder, setSortOrder] = useState('newest');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      let userData = null;
+
+      try {
+        if (Platform.OS === 'web') {
+          userData = JSON.parse(localStorage.getItem('userData'));
+        } else {
+          const storedData = await SecureStore.getItemAsync('userData');
+          userData = storedData ? JSON.parse(storedData) : null;
+        }
+
+        if (userData) {
+          setUserData(userData);
+        } else {
+          console.error('No user data found.');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false); // Finish loading
+      }
+    };
+
+    fetchUserData();
+  }, []); // Run once when the component is mounted
   
   // Fetch all users and map by user ID
   useEffect(() => {
@@ -192,6 +214,10 @@ export default function Homepage() {
   const handleRefresh = () => {
     fetchPosts();
   };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   if(Platform.OS ==="web"){
     return (
