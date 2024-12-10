@@ -21,6 +21,8 @@ export default function ProfilePage() {
   const [usermemberclubs, setusermemberclubs] = useState([]);
   const [resetFlag, setresetFlag] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [clubId, setClubId] = useState(null);
+
 
   const handleRefresh = () => {
     navigation.reset({
@@ -261,6 +263,56 @@ export default function ProfilePage() {
           </View>
         </Modal>
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={newClubModalVisible}
+        onRequestClose={() => setNewClubModalVisible(!newClubModalVisible)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Edit Club</Text>
+            <TextInput
+              placeholder="Club Name"
+              style={styles.input}
+              onChangeText={setClubName}
+              value={clubName}
+            />
+            <TextInput
+              style={styles.inputDescription}
+              placeholder="Enter club description..."
+              placeholderTextColor="#a59b8c"
+              multiline={true}
+              numberOfLines={6}
+              value={clubDescription}
+              onChangeText={setClubDescription}
+            />
+            <TouchableOpacity
+              style={styles.bookButton}
+              onPress={() => {
+                setNewClubModalVisible(false); // Close the modal
+                navigation.navigate('BookSearch', {
+                  clubName,
+                  clubDescription,
+                  userId,
+                  searchUsage: "update",
+                  clubId,
+                  onSelectBook: (book) => setCurrentBook(book), // Pass the selected book object
+                });
+              }}
+            >
+              <Text style={styles.textStyle}>Search for Book</Text>
+            </TouchableOpacity>
+
+            <View style={styles.buttonsContainer}>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setNewClubModalVisible(false)}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
         <View style={styles.profileContainer}>
           <View style={styles.profileHeader}>
             <Image source={{ uri: user.profilePic }} style={styles.profilePicture} />
@@ -274,7 +326,7 @@ export default function ProfilePage() {
           </View>
 
         <View style={styles.clubsSection}>
-          <Text style={styles.sectionTitle}>My Clubs</Text>
+          <Text style={styles.sectionTitle}>Clubs I Have Joined</Text>
           <FlatList
             data={user.clubs}
             keyExtractor={(item, index) => index.toString()}
@@ -297,20 +349,23 @@ export default function ProfilePage() {
 
         <View >
           <Text style={styles.sectionTitle}>Clubs I Own</Text>
-          <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
-            <Text style={styles.addButtonText}>+ Add New Club</Text>
+          <TouchableOpacity style={styles.addClubButton} onPress={() => setNewClubModalVisible(true)}>
+            <Text style={styles.addClubButtonText}>+ Add New Club</Text>
           </TouchableOpacity>
           <FlatList
             data={userClubs}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View>
-              <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
+              {/* <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
                   <Text style={styles.addButtonText}>Edit club</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               <View style={styles.ownedClubItem}>
                 <Text style={styles.myClubName}>{item.name}</Text>
                 <Text style={styles.myCurrentRead}>{item.description}</Text>
+                <TouchableOpacity style={styles.addButton} onPress={() => {setNewClubModalVisible(true); setClubId(item.id)}}>
+                  <img src = "https://icons.veryicon.com/png/o/miscellaneous/linear-small-icon/edit-246.png" style={styles.removeIcon}/>
+              </TouchableOpacity>
               </View>
               </View>
             )}

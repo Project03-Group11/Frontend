@@ -53,17 +53,14 @@ function MainTabs() {
   const isAuthenticated = useAuth();
   return (
     <Tab.Navigator
-      screenOptions={{
-        // tabBarStyle: {
-        //   backgroundColor: '#c9ad9d',
-        // },
-        tabBarStyle: {
-          backgroundColor: '#c9ad9d',
+    screenOptions={{
+      tabBarStyle: {
+        backgroundColor: '#c9ad9d',
           height: Platform.OS === 'android' ? 90 : 60,
           paddingBottom: Platform.OS === 'android' ? 20 : 10,
-        },        
-        tabBarActiveTintColor: '#ebe8e6',
-        tabBarInactiveTintColor: '#919090',
+      },        
+        tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: '#281b0d',
         headerStyle: {
           backgroundColor: '#c9ad9d',
         },

@@ -279,7 +279,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0f0f0', 
-  }
+  },
+  addClubButton: {
+    backgroundColor: '#d4b59e', // soft coffee color for the button background
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 2,
+    marginVertical: 10,
+  },
+  addClubButtonText: {
+    color: '#332211', // white text color for better contrast
+    fontSize: 16,
+    fontWeight: '600',
+  },
 
 
   //APP 
