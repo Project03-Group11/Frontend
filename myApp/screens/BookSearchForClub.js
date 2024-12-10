@@ -51,6 +51,10 @@ export default function BookSearchForClubPage({ route, navigation }) {
 
 
     const handleUpdateClub = async (book) => {
+        console.log(clubId);
+        console.log(book.id);
+        console.log(clubName);
+        console.log(clubDescription);
         try {
             const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/club/update/${clubId}`, {
                 method: 'PUT',

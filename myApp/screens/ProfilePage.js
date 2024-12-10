@@ -21,6 +21,8 @@ export default function ProfilePage() {
   const [usermemberclubs, setusermemberclubs] = useState([]);
   const [resetFlag, setresetFlag] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [clubId, setClubId] = useState(null);
+
 
   const handleRefresh = () => {
     navigation.reset({
@@ -267,7 +269,7 @@ export default function ProfilePage() {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Create New Club</Text>
+            <Text style={styles.modalText}>Edit Club</Text>
             <TextInput
               placeholder="Club Name"
               style={styles.input}
@@ -291,7 +293,8 @@ export default function ProfilePage() {
                   clubName,
                   clubDescription,
                   userId,
-                  searchUsage: "create",
+                  searchUsage: "update",
+                  clubId,
                   onSelectBook: (book) => setCurrentBook(book), // Pass the selected book object
                 });
               }}
@@ -321,7 +324,7 @@ export default function ProfilePage() {
         </View>
 
         <View style={styles.clubsSection}>
-          <Text style={styles.sectionTitle}>My Clubs</Text>
+          <Text style={styles.sectionTitle}>Clubs I Have Joined</Text>
           <FlatList
             data={user.clubs}
             keyExtractor={(item, index) => index.toString()}
@@ -344,20 +347,23 @@ export default function ProfilePage() {
 
         <View >
           <Text style={styles.sectionTitle}>Clubs I Own</Text>
-          <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
-            <Text style={styles.addButtonText}>+ Add New Club</Text>
+          <TouchableOpacity style={styles.addClubButton} onPress={() => setNewClubModalVisible(true)}>
+            <Text style={styles.addClubButtonText}>+ Add New Club</Text>
           </TouchableOpacity>
           <FlatList
             data={userClubs}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View>
-              <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
+              {/* <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
                   <Text style={styles.addButtonText}>Edit club</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               <View style={styles.ownedClubItem}>
                 <Text style={styles.myClubName}>{item.name}</Text>
                 <Text style={styles.myCurrentRead}>{item.description}</Text>
+                <TouchableOpacity style={styles.addButton} onPress={() => {setNewClubModalVisible(true); setClubId(item.id)}}>
+                  <img src = "https://icons.veryicon.com/png/o/miscellaneous/linear-small-icon/edit-246.png" style={styles.removeIcon}/>
+              </TouchableOpacity>
               </View>
               </View>
             )}

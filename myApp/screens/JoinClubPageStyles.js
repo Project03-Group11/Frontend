@@ -72,7 +72,12 @@ const styles = StyleSheet.create({
   },
 
   clubDetails: {
-    flexDirection: 'row',
+    flexDirection: 'row', // Left and right side layout
+    alignItems: 'flex-start', // Align top
+    justifyContent: 'space-between',
+  },
+  clubImageContainer: {
+    width: '30%', // Takes up 30% of the space
     alignItems: 'center',
   },
 
@@ -80,11 +85,18 @@ const styles = StyleSheet.create({
     width: 90, 
     height: 135, 
     borderRadius: 10,
-    marginRight: 18, 
+    marginBottom: 8, // Add spacing between image and title
+  },
+  clubTitle: {
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    color: '#3e2a1c',
+    textAlign: 'center',
   },
 
   clubTextContainer: {
-    flex: 1,
+    flex: 1, // Takes up the remaining space
+    marginLeft: 18, // Space between image container and text container
   },
 
   summary: {
@@ -101,7 +113,7 @@ const styles = StyleSheet.create({
   },
 
   joinButtonText: {
-    color: 'white',
+    color: '#9c6644',
     fontWeight: 'bold',
     textAlign: 'center',
   },
