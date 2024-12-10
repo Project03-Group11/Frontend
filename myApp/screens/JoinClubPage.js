@@ -33,6 +33,7 @@ const JoinClubPage = () => {
           return {
             ...club,
             coverImg: bookData.coverImg, 
+            title: bookData.title,
           };
         }));
 
@@ -159,27 +160,31 @@ const JoinClubPage = () => {
       </View>
 
       <ScrollView contentContainerStyle={styles.resultsContainer}>
-        {results.map((club) => (
-          <View key={club.id} style={styles.clubCard}>
-            <Text style={styles.clubName}>{club.name}</Text>
-            <View style={styles.clubDetails}>
-              <Image
-                source={{ uri: club.coverImg }} 
-                style={styles.clubImage}
-              />
-              <View style={styles.clubTextContainer}>
-                <Text style={styles.summary}>{club.description}</Text>
-                <TouchableOpacity
-                  style={styles.joinButton}
-                  onPress={() => handleJoinClub(club.id)}
-                >
-                  <Text style={styles.joinButtonText}>Join Club</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+  {results.map((club) => (
+    <View key={club.id} style={styles.clubCard}>
+      <Text style={styles.clubName}>{club.name}</Text>
+      <View style={styles.clubDetails}>
+        <View style={styles.clubImageContainer}>
+          <Image
+            source={{ uri: club.coverImg }} 
+            style={styles.clubImage}
+          />
+          <Text style={styles.clubTitle}>{club.title}</Text>
+        </View>
+        <View style={styles.clubTextContainer}>
+          <Text style={styles.summary}>{club.description}</Text>
+          <TouchableOpacity
+            style={styles.joinButton}
+            onPress={() => handleJoinClub(club.id)}
+          >
+            <Text style={styles.joinButtonText}>Join Club</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  ))}
+</ScrollView>
+
     </View>
   );
 };
