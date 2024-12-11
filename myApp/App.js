@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import GoogleSignInExpo from './src/components/login/GoogleSignInExpo';
 import GoogleSignInWeb from './src/components/login/GoogleSignInWeb';
@@ -55,7 +56,9 @@ function MainTabs() {
     screenOptions={{
       tabBarStyle: {
         backgroundColor: '#c9ad9d',
-      },
+          height: Platform.OS === 'android' ? 90 : 60,
+          paddingBottom: Platform.OS === 'android' ? 20 : 10,
+      },        
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: '#281b0d',
         headerStyle: {
@@ -72,13 +75,24 @@ function MainTabs() {
           <Tab.Screen
             name="WebLogin"
             component={GoogleSignInWeb}
-            options={{ title: 'Web Login' }}
+            options={{ 
+              title: 'Web Login', 
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="login" size={size} color={color} />
+              ),
+            }}
           />
         ) : (
           <Tab.Screen
             name="AppLogin"
             component={GoogleSignInExpo}
-            options={{ title: 'App Login' }}
+            options={{ 
+              title: 'App Login',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="login" size={size} color={color} />
+              ), 
+            }}
+            
           />
         )
       ) : (
@@ -86,22 +100,42 @@ function MainTabs() {
           <Tab.Screen
             name="Homepage"
             component={Homepage}
-            options={{ title: 'HomePage' }}
+            options={{
+              title: 'Home Page ',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="home" size={size} color={color} />
+              ), 
+            }}
           />
           <Tab.Screen
             name="JoinClub"
             component={JoinClubPage}
-            options={{ title: 'Join Club' }}
+            options={{
+              title: 'Join Club ',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="group" size={size} color={color} />
+              ),
+            }}
           />
           <Tab.Screen
             name="BookSearchPage"
             component={BookSearchPage}
-            options={{ title: 'Book Search' }}
+            options={{
+              title: 'Book Search ',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="search" size={size} color={color} />
+              ),
+            }}          
           />
           <Tab.Screen
             name="Profile"
             component={ProfilePage}
-            options={{ title: 'Profile' }}
+            options={{
+              title: 'Profile ',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="person" size={size} color={color} />
+              ),
+            }}
           />
         </>
       )}

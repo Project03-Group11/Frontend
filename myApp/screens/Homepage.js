@@ -3,8 +3,10 @@ import {Platform, View, Text, FlatList, StyleSheet, Pressable, Image, ActivityIn
 import { Picker } from '@react-native-picker/picker';
 import styles from './HomepageStyles';
 import { useNavigation } from '@react-navigation/native';
-import CreatePost from './CreatePost';
 import * as SecureStore from 'expo-secure-store';
+import CreatePost from './CreatePost';
+import RNPickerSelect from 'react-native-picker-select';
+
 
 const Post = ({ postId, tag, username, profilePic, content, timestamp, likes }) => {
   const [liked, setLiked] = useState(false);
@@ -140,16 +142,25 @@ export default function Homepage() {
   }, []);
 
   // Fetch user ID by email
-    useEffect(() => {
+  useEffect(() => {
+    if (!userData.email) {
+      return;
+    }
       const fetchUserId = async () => {
         try {
-          const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/email/${userData.email}`);
-          const data = await response.json();
-          // setUserId(data.id);
+          const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/user/get/email/${userData.email}`);         
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const text = await response.text();
+          if (!text) {
+            throw new Error("Response body is empty");
+          }
+          const data = JSON.parse(text);
           if(Platform.OS==='web'){
             localStorage.setItem("userId",data.id);
           }else{
-            SecureStore.setItem("userId",data.id);
+            SecureStore.setItem("userId",JSON.stringify(data.id));
           }
         } catch (error) {
           console.error("Error fetching user id:", error);
@@ -217,37 +228,88 @@ export default function Homepage() {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
+  if(Platform.OS ==="web"){
+    return (
+      <View style={styles.container}>
+        <View style={styles.filterContainer}>
+          <Text style={styles.filterLabel}>Sort By:</Text>
+          <Picker style={styles.sortPicker}
+            selectedValue={sortOrder}
+            onValueChange={(itemValue) => setSortOrder(itemValue)}
+          >
+            <Picker.Item label="Newest to Oldest" value="newest" />
+            <Picker.Item label="Oldest to Newest" value="oldest" />
+          </Picker>
+        </View>
+  
+        <CreatePost onPostCreated={handleRefresh()}/>
+  
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.postId}
+          renderItem={({ item }) => (
+            <Post
+              postId={item.postId}
+              tag={item.tag}
+              username={item.username}
+              profilePic={item.profilePic}
+              content={item.content}
+              timestamp={item.timestamp}
+              likes={item.likes}
+            />
+          )}
+          contentContainerStyle={styles.listContainer}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
         <Text style={styles.filterLabel}>Sort By:</Text>
-        <Picker style={styles.sortPicker}
-          selectedValue={sortOrder}
-          onValueChange={(itemValue) => setSortOrder(itemValue)}
-        >
-          <Picker.Item label="Newest to Oldest" value="newest" />
-          <Picker.Item label="Oldest to Newest" value="oldest" />
-        </Picker>
+        <View style={styles.dropdownContainer}>
+          <RNPickerSelect 
+            onValueChange={(value) => {
+              // console.log('Selected Value:', value);
+              setSortOrder(value);
+            }}
+            value={sortOrder}
+            items={[
+              { label: 'Newest to Oldest', value: 'newest' },
+              { label: 'Oldest to Newest', value: 'oldest' },
+            ]}
+            placeholder={{
+              label: 'Select an option...', // Placeholder text
+              value: null, // Placeholder value
+              color: '#FF0000',
+            }}
+            style={{
+              inputIOS: styles.inputIOS,
+              inputAndroid: styles.inputAndroid,
+            }}
+          />
+        </View>
       </View>
 
-<CreatePost onPostCreated={handleRefresh()}/>
+      <CreatePost onPostCreated={handleRefresh()}/>
 
-<FlatList
-  data={posts}
-  keyExtractor={(item) => item.postId}
-  renderItem={({ item }) => (
-    <Post
-      postId={item.postId}
-      tag={item.tag}
-      username={item.username}
-      profilePic={item.profilePic}
-      content={item.content}
-      timestamp={item.timestamp}
-      likes={item.likes}
-    />
-  )}
-  contentContainerStyle={styles.listContainer}
-/>
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.postId}
+        renderItem={({ item }) => (
+          <Post
+            postId={item.postId}
+            tag={item.tag}
+            username={item.username}
+            profilePic={item.profilePic}
+            content={item.content}
+            timestamp={item.timestamp}
+            likes={item.likes}
+          />
+        )}
+        contentContainerStyle={styles.listContainer}
+      />
     </View>
   );
 }

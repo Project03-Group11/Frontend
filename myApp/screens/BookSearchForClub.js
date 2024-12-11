@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import styles from './BookSearchForClubStyles';
+import * as SecureStore from 'expo-secure-store';
+
 
 export default function BookSearchForClubPage({ route, navigation }) {
     const { clubName, clubDescription, userId, searchUsage, clubId } = route.params; // Ensure clubId is passed if updating a club
     const [searchQuery, setSearchQuery] = useState('');
     const [books, setBooks] = useState([]);
+    console.log("PArams",route.params);
 
     const handleSearch = async () => {
         try {
@@ -37,8 +40,7 @@ export default function BookSearchForClubPage({ route, navigation }) {
                 Alert.alert('Success', `Club "${data.name}" created successfully!`, [
                     { text: 'OK', onPress: () => setTimeout(() => navigation.goBack(), 100) }, // Delay goBack slightly
                 ]);
-                navigation.goBack();
-                navigation.pop();
+                navigation.navigate('Profile', { refreshParent: true });
             } else {
                 console.error('Error creating club:', response.statusText);
                 Alert.alert('Error', 'Failed to create club. Please try again.');
@@ -51,10 +53,6 @@ export default function BookSearchForClubPage({ route, navigation }) {
 
 
     const handleUpdateClub = async (book) => {
-        console.log(clubId);
-        console.log(book.id);
-        console.log(clubName);
-        console.log(clubDescription);
         try {
             const response = await fetch(`https://group11be-29e4f568939f.herokuapp.com/api/club/update/${clubId}`, {
                 method: 'PUT',
@@ -71,10 +69,9 @@ export default function BookSearchForClubPage({ route, navigation }) {
             if (response.ok) {
                 const data = await response.json();
                 Alert.alert('Success', `Club "${data.name}" updated successfully!`, [
-                    { text: 'OK', onPress: () => setTimeout(() => navigation.pop(), 100) },
+                    { text: 'OK', onPress: () => setTimeout(() => navigation.navigate('Profile', { refreshParent: true }), 100) },
                 ]);
-                navigation.goBack();
-                navigation.pop();
+                navigation.navigate('Profile', { refreshParent: true });
             } else {
                 console.error('Error updating club:', response.statusText);
                 Alert.alert('Error', 'Failed to update club. Please try again.');
