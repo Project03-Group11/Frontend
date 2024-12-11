@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Platform, ScrollView,View, Text, Image, TouchableOpacity, FlatList, Alert, Modal, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import styles from "./ProfilepageStyles";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 
 export default function ProfilePage() {
   const navigation = useNavigation();
+  const route = useRoute();
   const [userId, setUserId] = useState(null);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,6 +23,7 @@ export default function ProfilePage() {
   const [resetFlag, setresetFlag] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Track loading state
   const [clubId, setClubId] = useState(null);
+  const [editClubModalVisible, setEditClubModalVisible] = useState(false);
 
 
   const handleRefresh = () => {
@@ -30,6 +32,12 @@ export default function ProfilePage() {
       routes: [{ name: 'MainTabs' }],
     });
   };
+
+  useEffect(() => {
+    if (route.params?.refreshParent) {
+      setresetFlag(!resetFlag); 
+    }
+  }, [route.params?.refreshParent]);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -101,7 +109,7 @@ export default function ProfilePage() {
         }
 
         const memberClubs = memberClubsData.map(member => clubsData.find(club => club.id === member.clubId));
-        setusermemberclubs(memberClubs);
+        setusermemberclubs(memberClubsData);
 
         // Update user with member clubs
         setUser(prevUser => ({
@@ -270,8 +278,8 @@ export default function ProfilePage() {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={newClubModalVisible}
-        onRequestClose={() => setNewClubModalVisible(!newClubModalVisible)}
+        visible={editClubModalVisible}
+        onRequestClose={() => setEditClubModalVisible(!editClubModalVisible)}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -294,7 +302,7 @@ export default function ProfilePage() {
             <TouchableOpacity
               style={styles.bookButton}
               onPress={() => {
-                setNewClubModalVisible(false); // Close the modal
+                setEditClubModalVisible(false); // Close the modal
                 navigation.navigate('BookSearch', {
                   clubName,
                   clubDescription,
@@ -309,7 +317,7 @@ export default function ProfilePage() {
             </TouchableOpacity>
 
             <View style={styles.buttonsContainer}>
-              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setNewClubModalVisible(false)}>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setEditClubModalVisible(false)}>
                 <Text style={styles.textStyle}>Cancel</Text>
               </Pressable>
             </View>
@@ -361,13 +369,10 @@ export default function ProfilePage() {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View>
-              {/* <TouchableOpacity style={styles.addButton} onPress={() => setNewClubModalVisible(true)}>
-                  <Text style={styles.addButtonText}>Edit club</Text>
-                </TouchableOpacity> */}
               <View style={styles.ownedClubItem}>
                 <Text style={styles.myClubName}>{item.name}</Text>
                 <Text style={styles.myCurrentRead}>{item.description}</Text>
-                <TouchableOpacity style={styles.addButton} onPress={() => {setNewClubModalVisible(true); setClubId(item.id)}}>
+                <TouchableOpacity style={styles.addButton} onPress={() => {setEditClubModalVisible(true); setClubId(item.id)}}>
                   <img src = "https://icons.veryicon.com/png/o/miscellaneous/linear-small-icon/edit-246.png" style={styles.removeIcon}/>
               </TouchableOpacity>
               </View>
@@ -464,6 +469,57 @@ export default function ProfilePage() {
         </View>
       </Modal>
 
+      {/* Modal for editing club */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={editClubModalVisible}
+        onRequestClose={() => setEditClubModalVisible(!editClubModalVisible)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Edit Club</Text>
+            <TextInput
+              placeholder="Club Name"
+              style={styles.input}
+              onChangeText={setClubName}
+              value={clubName}
+            />
+            <TextInput
+              style={styles.inputDescription}
+              placeholder="Enter club description..."
+              placeholderTextColor="#a59b8c"
+              multiline={true}
+              numberOfLines={6}
+              value={clubDescription}
+              onChangeText={setClubDescription}
+            />
+            <TouchableOpacity
+              style={styles.bookButton}
+              onPress={() => {
+                setEditClubModalVisible(false); // Close the modal
+                navigation.navigate('BookSearch', {
+                  clubName,
+                  clubDescription,
+                  userId,
+                  searchUsage: "update",
+                  clubId,
+                  onSelectBook: (book) => setCurrentBook(book), // Pass the selected book object
+                });
+              }}
+            >
+              <Text style={styles.textStyle}>Search for Book</Text>
+            </TouchableOpacity>
+
+            <View style={styles.buttonsContainer}>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setEditClubModalVisible(false)}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* Profile Section */}
       <View style={styles.profileHeaderA}>
         <Image
@@ -490,6 +546,11 @@ export default function ProfilePage() {
             <View key={index} style={styles.clubItemA}>
               <Text style={styles.clubNameA}>{item.name}</Text>
               <Text style={styles.clubDescriptionA}>{item.description}</Text>
+              <TouchableOpacity style={styles.addButtonA} onPress={() => {removeClub(item.id)}}>
+                  <Image 
+                   source = {{uri:"https://cdn-icons-png.flaticon.com/512/14090/14090261.png"}}
+                   style={styles.removeIcon}/>
+              </TouchableOpacity>
             </View>
           ))
         ) : (
@@ -511,6 +572,11 @@ export default function ProfilePage() {
               <View key={index} style={styles.clubItemA}>
                 <Text style={styles.clubNameA}>{item.name}</Text>
                 <Text style={styles.clubDescriptionA}>{item.description}</Text>
+                <TouchableOpacity style={styles.addButtonA} onPress={() => {setEditClubModalVisible(true); setClubId(item.id)}}>
+                  <Image 
+                   source = {{uri:"https://icons.veryicon.com/png/o/miscellaneous/linear-small-icon/edit-246.png"}}
+                   style={styles.removeIcon}/>
+                </TouchableOpacity>
               </View>
             ))
           ) : (

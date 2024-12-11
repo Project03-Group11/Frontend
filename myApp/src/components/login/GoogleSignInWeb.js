@@ -94,7 +94,7 @@ function GoogleSignInWeb( ) {
                                 }}
                             />
                         </div>
-                        <button type="button" onClick={mockLogin}>Mock Login</button>
+                        {/* <button type="button" onClick={mockLogin}>Mock Login</button> */}
 
                         {error && <div className="error-message">{error}</div>}
 
