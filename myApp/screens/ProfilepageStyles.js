@@ -453,7 +453,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '100%',
   },
-
+  clubInfoContainer: {
+    flexDirection: 'row', // Align the club info and icon in a row
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1, // Take the full width of the container
+  },
+  textContainer: {
+    flex: 1, // Ensure text takes up available space
+    marginRight: 10, // Add some space between text and icon
+    maxWidth: "85%",
+  },
+  removeButtonContainer: {
+    justifyContent: 'center', // Center the remove icon vertically
+    alignItems: 'center',
+    width: 40, // Explicit width for the icon container
+  },
+  removeIconA: {
+    width: 24, // Icon size
+    height: 24,
+  },
 
 });
 

@@ -136,6 +136,12 @@ function MainTabs() {
                 <MaterialIcons name="person" size={size} color={color} />
               ),
             }}
+            listeners={({ navigation }) => ({
+              tabPress: (e) => {
+                e.preventDefault(); // Prevent default navigation
+                navigation.navigate('Profile', { refreshParent: true });
+              },
+            })}
           />
         </>
       )}

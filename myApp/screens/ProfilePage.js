@@ -33,6 +33,12 @@ export default function ProfilePage() {
     });
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      setresetFlag((prev) => !prev);
+    }, [])
+  );
+
   useEffect(() => {
     if (route.params?.refreshParent) {
       setresetFlag(!resetFlag); 
@@ -427,17 +433,17 @@ export default function ProfilePage() {
         visible={newClubModalVisible}
         onRequestClose={() => setNewClubModalVisible(!newClubModalVisible)}
       >
-        <View style={styles.centeredViewA}>
-          <View style={styles.modalViewA}>
-            <Text style={styles.modalTextA}>Create New Club</Text>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Create New Club</Text>
             <TextInput
-              style={styles.inputA}
+              style={styles.input}
               placeholder="Club Name"
               onChangeText={setClubName}
               value={clubName}
             />
             <TextInput
-              style={styles.inputDescriptionA}
+              style={styles.inputDescription}
               placeholder="Enter club description..."
               placeholderTextColor="#a59b8c"
               multiline
@@ -446,7 +452,7 @@ export default function ProfilePage() {
               onChangeText={setClubDescription}
             />
             <TouchableOpacity
-              style={styles.bookButtonA}
+              style={styles.bookButton}
               onPress={() => {
                 setNewClubModalVisible(false);
                 navigation.navigate('BookSearch', {
@@ -457,14 +463,16 @@ export default function ProfilePage() {
                 });
               }}
             >
-              <Text style={styles.textStyleA}>Search for Book</Text>
+              <Text style={styles.textStyle}>Search for Book</Text>
             </TouchableOpacity>
-            <Pressable
-              style={[styles.buttonA, styles.buttonCloseA]}
-              onPress={() => setNewClubModalVisible(false)}
-            >
-              <Text style={styles.textStyleA}>Cancel</Text>
-            </Pressable>
+            <View style= {styles.buttonsContainer}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setNewClubModalVisible(false)}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
@@ -544,13 +552,17 @@ export default function ProfilePage() {
         {user.clubs && user.clubs.length > 0 ? (
           user.clubs.map((item, index) => (
             <View key={index} style={styles.clubItemA}>
-              <Text style={styles.clubNameA}>{item.name}</Text>
-              <Text style={styles.clubDescriptionA}>{item.description}</Text>
-              <TouchableOpacity style={styles.addButtonA} onPress={() => {removeClub(item.id)}}>
-                  <Image 
-                   source = {{uri:"https://cdn-icons-png.flaticon.com/512/14090/14090261.png"}}
-                   style={styles.removeIcon}/>
-              </TouchableOpacity>
+              <View style={styles.clubInfoContainer}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.clubNameA}>{item.name}</Text>
+                  <Text style={styles.clubDescriptionA} numberOfLines={2} ellipsizeMode="tail">{item.description}</Text>
+                </View>
+                <TouchableOpacity style={styles.removeButtonContainer} onPress={() => {removeClub(item.id)}}>
+                    <Image 
+                    source = {{uri: "https://cdn-icons-png.flaticon.com/512/14090/14090261.png"}}
+                    style={styles.removeIconA}/>
+                </TouchableOpacity>
+              </View>
             </View>
           ))
         ) : (
@@ -570,13 +582,17 @@ export default function ProfilePage() {
           {userClubs.length > 0 ? (
             userClubs.map((item, index) => (
               <View key={index} style={styles.clubItemA}>
-                <Text style={styles.clubNameA}>{item.name}</Text>
-                <Text style={styles.clubDescriptionA}>{item.description}</Text>
-                <TouchableOpacity style={styles.addButtonA} onPress={() => {setEditClubModalVisible(true); setClubId(item.id)}}>
-                  <Image 
-                   source = {{uri:"https://icons.veryicon.com/png/o/miscellaneous/linear-small-icon/edit-246.png"}}
-                   style={styles.removeIcon}/>
-                </TouchableOpacity>
+                <View style={styles.clubInfoContainer}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.clubNameA}>{item.name}</Text>
+                    <Text style={styles.clubDescriptionA} numberOfLines={2} ellipsizeMode="tail">{item.description}</Text>
+                  </View>
+                  <TouchableOpacity style={styles.removeButtonContainer} onPress={() => {setEditClubModalVisible(true); setClubId(item.id)}}>
+                    <Image 
+                    source = {{uri:"https://icons.veryicon.com/png/o/miscellaneous/linear-small-icon/edit-246.png"}}
+                    style={styles.removeIconA}/>
+                  </TouchableOpacity>
+                </View>
               </View>
             ))
           ) : (
